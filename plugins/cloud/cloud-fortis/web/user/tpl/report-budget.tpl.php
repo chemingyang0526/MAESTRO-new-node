@@ -1,15 +1,5 @@
 <style>
     #project_tab_ui { display: none; }  /* hack for tabmenu issue */
-    /*
-    table {
-        width: 100%;
-        display:block;
-    }
-    thead {
-        display: inline-block;
-        width: 100%;
-    }
-    */
     tbody {
         display: inline-block;
         width: 100%;
@@ -20,7 +10,25 @@
         width: 100%;
         display: table;
     }
+    ::-webkit-scrollbar {
+    width: 5px;
+    }
+     
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3); 
+        border-radius: 3px;
+    }
+     
+    ::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
+    }
 </style>
+<script src="/cloud-fortis/js/c3/d3.v3.min.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/c3/c3.min.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/chartjs/Chart.bundle.min.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/chartjs/utils.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/fetch-report.js" type="text/javascript"></script>
 <script>
     var budgetpage = true;
     var datepickeryep = true;
@@ -31,13 +39,14 @@
         <div class="col-sm-12">
             <section class="card">  
                 <div class="card-header">
-                    <span class="cat__core__title d-inline-block">
+                    <span class="cat__core__title d-inline-block" style="min-width: 500px;">
                         <label class="d-inline"><strong>Budget Planning</strong></label>
-                        <a class="d-inline" id="prev-budget" style="padding: 0 1rem;"><i class="fa fa-backward disabled"></i></a>
+                        <!-- <a class="d-inline" id="prev-budget" style="padding: 0 1rem;"><i class="fa fa-backward disabled"></i></a> 
                         <h5 class="d-inline" id="budget-name" style="padding: 0 2rem; text-align: center;">BUDGET NAME</h5>
-                        <a class="d-inline" id="next-budget" style="padding: 0 1rem;"><i class="fa fa-forward"></i></a>
+                        <a class="d-inline" id="next-budget" style="padding: 0 1rem;"><i class="fa fa-forward"></i></a> -->
+                        <select id="budgets" class="form-control d-inline" style="max-width: 19rem;"></select>
                     </span>
-                    <div class="pull-right">
+                    <div class="pull-right d-inline-block">
                     <a id="create-budget" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#create-budget-modal"><i class="fa fa-plus"></i>&nbsp;Create Budget</a>
                     </div>
                 </div>

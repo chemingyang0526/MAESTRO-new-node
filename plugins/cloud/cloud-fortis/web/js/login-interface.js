@@ -45,11 +45,9 @@ $(document).ready(function(){
 			success: function(){
 				var domain = domainpart;
 				location.href = 'http://'+domain+'/cloud-fortis/user/';
-				//location.href = 'http://'+username+':'+password+'@'+domain+'/cloud-fortis/user/';
-				//setTimeout(function() { window.location = '/cloud-fortis/user/'; }, 2000);
 			},
 			error: function(){
-				$("#tab_currenttab3").css("display","inline");  // show recover password link
+				$("#tab_register_tab3").css("display","inline");  // show recover password link
 
 				if(errmsg){
 					alert(errmsg);
