@@ -41,7 +41,7 @@ body {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	width: 114px;
+	width: 123px;
 	min-height: 187px;
 }
 .score-logan, .score-logo {
@@ -49,7 +49,7 @@ body {
 	float: left;
 	margin: 0;
 	margin-bottom: 0px;
-	width: 114px;
+	width: 123px;
 }
 .score-logan {
 	padding: 0;
@@ -126,7 +126,7 @@ end fix modal jump issue */
 <div id="page">
 	<div class="score-banner">
 		<div class="score-logo">
-			<a href="/cloud-fortis"><img src="{baseurl}/img/fortis-logo.png" alt="htvcenter Enterprise Cloud" id="logo-score">
+			<a href="/cloud-fortis"><img src="{baseurl}/img/score-logo.png" alt="htvcenter Enterprise Cloud" id="logo-score">
 			</a>
 		</div>
 		<div class="score-logan">

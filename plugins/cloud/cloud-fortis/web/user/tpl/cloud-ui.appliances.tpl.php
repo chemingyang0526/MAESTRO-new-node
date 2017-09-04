@@ -383,6 +383,7 @@ $(document).ready(function() {
 		}
 	}
 */
+/*
 	function format (d) {
 		// `d` is the original data object for the row
 		return	'<section class="card">'+
@@ -431,15 +432,9 @@ $(document).ready(function() {
 						'</div>'+
 					'</div>'+
 				'</section>';
-    /*
-    return	'<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-				'<tr style="height: 175px;">'+
-					'<td>Full name:</td>'+
-					'<td>abc</td>'+
-				'</tr>'+
-			'</table>';*/
-	}
 
+	}
+*/
 	var dt = $("#cloud_appliances").DataTable( {
 
 		"columns": [
@@ -463,6 +458,18 @@ $(document).ready(function() {
 		"bAutoWidth": true
 	} );
 
+
+	$(".toggle-graph a").popover({
+		html: true,
+		placement: "bottom",
+		content: function() {
+			return $('#popover-content').html();
+		}
+	});
+
+
+	/* This and function format is for adding an expanded row by clicking on the ... button  
+
 	$(".toggle-graph a").click(function () {
 
 		var tr = $(this).closest('tr');
@@ -485,7 +492,7 @@ $(document).ready(function() {
 			dataType: "json",
 		});
 
-		/*
+		
 		cpu_data_request.done(function(data) {
 
 			var chart_cpu = c3.generate({
@@ -535,8 +542,9 @@ $(document).ready(function() {
 		memory_data_request.fail(function( jqXHR, textStatus ) {
 			alert( "Memory datae request failed: " + textStatus );
 		});
-		*/
+		
 	});
+	*/
 });
 
 
@@ -687,8 +695,12 @@ function get_state( id ) {
 	</div>
 </div>
 
-
-
+<ul id="popover-content" class="list-group" style="display: none">
+	<a href="#" class="list-group-item">Start</a>
+	<a href="#" class="list-group-item">Stop</a>
+	<a href="#" class="list-group-item">Pause</a>
+	<a href="#" class="list-group-item">Delete</a>
+</ul>
 
 
 <!--
