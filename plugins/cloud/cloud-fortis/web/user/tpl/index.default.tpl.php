@@ -11,8 +11,9 @@
 
  <!-- Example assets 
         <link rel="stylesheet" type="text/css" href="{baseurl}/css/jcarousel.css">
-        <link rel="stylesheet" type="text/css" href="{baseurl}/css/datepicker.css">
-     
+-->
+<link rel="stylesheet" type="text/css" href="{baseurl}/css/datepicker.css">
+<!--     
         <script type="text/javascript" src="{baseurl}/js/jcarousel.min.js"></script>
         <link type="text/css" href="{baseurl}/css/htmlobject.css" rel="stylesheet">
         <script type="text/javascript" src="{baseurl}/js/jcarousel.responsive.js"></script>
@@ -30,8 +31,8 @@
 <link type="text/css" href="{baseurl}/css/nifty.css" rel="stylesheet">
 -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
-<link rel="icon" href="{baseurl}/img/favicon.ico?v=9" type="image/x-icon">
-<link rel="shortcut icon" href="{baseurl}/img/htbase.png" type="image/png">
+<!--<link rel="icon" href="{baseurl}/img/favicon.ico?v=9" type="image/x-icon"> -->
+<link rel="shortcut icon" href="{baseurl}/img/score-icon.png?v=2" type="image/png">
 
 	<!--Morris.js [ OPTIONAL ]
 	<link href="{baseurl}designplugins/morris-js/morris.min.css" rel="stylesheet"> -->
@@ -83,7 +84,7 @@
             <div class="cat__top-bar__logo">
               <a href="{baseurl}user/index.php?project_tab_ui=0&cloud_ui=home">
                 <div class="logo">
-                    <img src="{baseurl}img/fortis-logo.png">
+                    <img src="{baseurl}img/score-icon.png">
                 </div>
                 <div class="slogan">
                     <h4>Score</h4>

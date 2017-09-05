@@ -38,6 +38,7 @@ body {
 .cat__top-bar__logo .slogan, .cat__top-bar__logo .logo {
     display: inline-block;
     float: left;
+    margin-right: 10px;
 }
 
 .cat__top-bar__logo .slogan h4 {

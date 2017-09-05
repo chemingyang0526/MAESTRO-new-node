@@ -8,11 +8,11 @@
 <link type="text/css" href="{baseurl}css/vender/tether/tether.min.css" rel="stylesheet">
 <link type="text/css" href="{baseurl}css/vender/bootstrap/bootstrap.min.css" rel="stylesheet">
 <link type="text/css" href="{baseurl}css/vender/bootstrap/bootstrap.css" rel="stylesheet">
-<link type="text/css" href="{baseurl}/css/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+<link type="text/css" href="{baseurl}css/fontawesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic" rel="stylesheet">
-<link rel="icon" href="{baseurl}img/favicon.ico?v=2" type="image/x-icon">
-<link rel="shortcut icon" href="{baseurl}img/favicon.ico?v=3" type="image/x-icon">
+<!-- <link rel="icon" href="{baseurl}img/favicon.ico?v=2" type="image/x-icon"> -->
+<link rel="shortcut icon" href="{baseurl}img/score-icon.png?v=3" type="image/png">
 <script type="text/javascript" src="{baseurl}js/login-interface.js"></script>
 <script type="text/javascript" src="{baseurl}js/cookie.js"></script>
 <link type="text/css" href="{baseurl}css/cleanui/core.cleanui.css" rel="stylesheet">
@@ -126,7 +126,7 @@ end fix modal jump issue */
 <div id="page">
 	<div class="score-banner">
 		<div class="score-logo">
-			<a href="/cloud-fortis"><img src="{baseurl}/img/score-logo.png" alt="htvcenter Enterprise Cloud" id="logo-score">
+			<a href="/cloud-fortis"><img src="{baseurl}img/htbaselogo.png" alt="htvcenter Enterprise Cloud" id="logo-score">
 			</a>
 		</div>
 		<div class="score-logan">
