@@ -109,7 +109,6 @@ var $cloud_id;
 	//--------------------------------------------
 	function select() {
 
-
 		if ( isset($_GET['action']) == true && $_GET['action'] == 'volumedata') {
 			$hostname = $_GET['hostname'];
 
@@ -392,6 +391,8 @@ var $cloud_id;
 
 		$cloudreq_array = $this->cloudrequest->get_all_ids_per_user($this->clouduser->id);
 		$user_requests = array();
+
+
 		// build an array of our appliance id's
 		foreach ($cloudreq_array as $cr) {
 			$user_requests[] = $cr['cr_id'];
@@ -423,6 +424,7 @@ var $cloud_id;
 		// now we go over all our appliances from the users request list
 		$app_count = 0;
 		$ta = array();
+
 		foreach ($user_requests as $reqid) {
 			$appliance = null;
 			$this->cloudrequest->get_instance_by_id($reqid);
@@ -804,8 +806,8 @@ var $cloud_id;
 			'Status',
 			'Details'
 		);
-		// redirect if $ta is empty
-		if(count($ta) > 0) {
+		// disable redirect if $ta is empty
+		// if(count($ta) > 0) {
 			/* NEW CODE for the table */
 
 			$table = '<table class="table table-hover nowrap dataTable dtr-inline" id="cloud_appliances" role="grid" style="width: 100%;"><thead><tr>';
@@ -840,7 +842,7 @@ var $cloud_id;
 
 				// $table .= '<td>' . $i . '</td>';
 				$table .=	'<td class="toggle-graph" row-id="' . $i . '">
-								<a href="#">
+								<a data-toggle="popover" data-trigger="focus" href="#">
 									<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
 								</a>
 							</td>';
@@ -850,10 +852,11 @@ var $cloud_id;
 			/* END NEW CODE for the table */
 
 			return $table;
-		} else {
-			$this->response->redirect(
-				$this->response->get_url($this->actions_name, 'create', $this->message_param, $this->lang['appliances']['msg_no_appliances_to_manage'])
-			);
+		//} else {
+
+		//	$this->response->redirect(
+		//		$this->response->get_url($this->actions_name, 'create', $this->message_param, $this->lang['appliances']['msg_no_appliances_to_manage'])
+		//	);
 		}
 	}
 

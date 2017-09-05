@@ -23,6 +23,13 @@
         border-radius: 3px;
         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.5); 
     }
+    .plan .plan-title {
+        font-size: 1.5em;
+        font-weight: 100;
+    }
+    .plan .plan-icon {
+        padding: 1em 0;
+    }
 </style>
 <link href="/cloud-fortis/css/jquery.steps.css" rel="stylesheet" type="text/css">
 <script src="/cloud-fortis/js/c3/d3.v3.min.js" type="text/javascript"></script>
@@ -165,39 +172,83 @@ $(document).ready(function() {
 
                 <h3>Step 2</h3>
                     <section>
-                        <!-- <div class="row">  -->
-                            <!--
-                            <div class="col-sm-1">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                            </div>
-                            -->
-                            <div class="col-lg-12">
 
-                                <div class="form-group d-inline-block" style="width: 100%;">
-                                    <div class="owl-carousel uninitiated owl-theme">
-                                        <div class="item">
-                                            {cloud_application_select_0_label}
-                                            {cloud_application_select_0_checkbox}
+                        <div class="col-lg-12">
+                           <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-4 col-xs-4 selectype">
+                                <div class="panel plan">
+                                    <div class="panel-body">
+                                        <span class="plan-title">CPU</span>
+                                        <div class="plan-icon">
+                                            <i class="fa fa-desktop"></i>
                                         </div>
-                                        <div class="item">
-                                            {cloud_application_select_1_label}
-                                            {cloud_application_select_1_checkbox}
-                                        </div>
-                                        <div class="item">
-                                            {cloud_application_select_2_label}
-                                            {cloud_application_select_2_checkbox}
-                                        </div>
-                                        <div class="item">
-                                            {cloud_application_select_3_label}
-                                            {cloud_application_select_3_checkbox}
-                                        </div>
-                                        <div class="item">
-                                            {cloud_application_select_4_label}
-                                            {cloud_application_select_4_checkbox}
-                                        </div>
+                                        <p class="text-muted pad-btm">
+                                            <label for="budgetcpu">Monthly Price Limit in $: </label>
+                                            <input type="text" name="input" id="budgetcpu">
+                                        </p>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-4 selectype">
+                                <div class="panel plan">
+                                    <div class="panel-body">
+                                        <span class="plan-title">Memory</span>
+                                        <div class="plan-icon">
+                                            <i class="fa fa-database"></i>
+                                        </div>
+                                        <p class="text-muted pad-btm">
+                                            <label for="budgetmemory">Monthly Price Limit in $: </label>
+                                            <input type="text" name="input" id="budgetmemory">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-4 selectype">
+                                <div class="panel plan">
+                                    <div class="panel-body">
+                                        <span class="plan-title">Storage</span>
+                                        <div class="plan-icon">
+                                            <i class="fa fa-hdd-o"></i>
+                                        </div>
+                                        <p class="text-muted pad-btm">
+                                            <label for="budgetstorage">Monthly Price Limit in $: </label>
+                                            <input type="text" name="input" id="budgetstorage">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-4 selectype">
+                                <div class="panel plan">
+                                    <div class="panel-body">
+                                        <span class="plan-title">Networking</span>
+                                        <div class="plan-icon">
+                                            <i class="fa fa-globe"></i>
+                                        </div>
+                                        <p class="text-muted pad-btm">
+                                            <label for="budgetnetwork">Monthly Price Limit in $: </label>
+                                            <input type="text" name="input" id="budgetnetwork">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-4 selectype">
+                                <div class="panel plan">
+                                    <div class="panel-body">
+                                        <span class="plan-title">Virtualization</span>
+                                        <div class="plan-icon">
+                                            <i class="fa fa-cloud"></i>
+                                        </div>
+                                        <p class="text-muted pad-btm">
+                                            <label for="budgetvm">Monthly Price Limit in $: </label>
+                                            <input type="text" name="input" id="budgetvm">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                             
                     </section>
                 <h3>Step3</h3>

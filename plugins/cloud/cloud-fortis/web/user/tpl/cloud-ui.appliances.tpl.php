@@ -455,17 +455,20 @@ $(document).ready(function() {
 		"search": {
 			"regex": true
 		},
-		"bAutoWidth": true
+		"bAutoWidth": true,
+		"fnDrawCallback": function( oSettings ) {
+			$(".toggle-graph a").popover({
+				html: true,
+				placement: "bottom",
+				content: function() {
+					return $('#popover-content').html();
+				}
+			});
+		}
 	} );
 
 
-	$(".toggle-graph a").popover({
-		html: true,
-		placement: "bottom",
-		content: function() {
-			return $('#popover-content').html();
-		}
-	});
+	
 
 
 	/* This and function format is for adding an expanded row by clicking on the ... button  
