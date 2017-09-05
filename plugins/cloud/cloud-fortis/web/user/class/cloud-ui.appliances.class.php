@@ -857,7 +857,7 @@ var $cloud_id;
 		//	$this->response->redirect(
 		//		$this->response->get_url($this->actions_name, 'create', $this->message_param, $this->lang['appliances']['msg_no_appliances_to_manage'])
 		//	);
-		}
+		// }
 	}
 
 	//--------------------------------------------
