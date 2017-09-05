@@ -7,3 +7,4 @@ plugins/local-server/*
 *.rrd
 *.tgz
 wc.db
+logs/syslog
