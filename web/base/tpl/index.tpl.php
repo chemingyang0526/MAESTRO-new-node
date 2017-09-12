@@ -812,9 +812,9 @@ function get_info_box() {
 	<script src="{baseurl}/js/scroll.js"></script>
 	<script src="{baseurl}/js/multiselect.js" type="text/javascript"></script>
 	<script src="{baseurl}/js/jcarousel.min.js"></script>
-	
 	<script src="{baseurl}/js/interface.js" type="text/javascript"></script>
-	
+	<!--<script src="{baseurl}/js/interface.js"></script>-->
+
 <script src="{baseurl}/js/htvcenter-ui.js" type="text/javascript"></script>
 <script src="{baseurl}/designplugins/gauge-js/gauge.min.js"></script>
 

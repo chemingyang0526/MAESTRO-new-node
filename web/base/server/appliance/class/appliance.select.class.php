@@ -68,6 +68,7 @@ var $lang = array();
 		$this->file     = $htvcenter->file();
 		$this->htvcenter  = $htvcenter;
 		$this->user     = $htvcenter->user();
+		$this->rootdir  = $this->htvcenter->get('webdir');
 	}
 
 	//--------------------------------------------
@@ -148,11 +149,15 @@ var $lang = array();
 		}
 
 		$disabled = array();
-		
-		//$appliances = $appliance->display_overview(0, 10000, $table->sort, $table->order);
-		$appliances = $appliance->display_overview(0, 10000, 'appliance_id', 'ASC');
-
-		foreach ($appliances as $index => $appliance_db) {
+		//echo $this->response->html->request()->get('resource_type_filter');
+		if($this->response->html->request()->get('resource_type_filter') == 'aws'){
+			$div_html = '<div id="aws-resources-instance"><p id="load-aws-instance"><i class="fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
+		} else if($this->response->html->request()->get('resource_type_filter') == 'azure'){
+			$div_html = '<div id="azure-resources-vms"><p id="load-azure-instance"><i class="ffa fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
+		} else { 
+			//$appliances = $appliance->display_overview(0, 10000, $table->sort, $table->order);
+			$appliances = $appliance->display_overview(0, 10000, 'appliance_id', 'ASC');
+			foreach ($appliances as $index => $appliance_db) {
 			
 			$appliance = new appliance();
 			$appliance->get_instance_by_id($appliance_db["appliance_id"]);
@@ -170,8 +175,7 @@ var $lang = array();
 			$resource_is_local_server = false;
 			$edit_resource_ip = '';
 
-			if ($this->response->html->request()->get('resource_type_filter') === '' || ($this->response->html->request()->get('resource_type_filter') == $resource->vtype )) {
-
+			if ( $this->response->html->request()->get('resource_type_filter') === '' || ($this->response->html->request()->get('resource_type_filter') == $resource->vtype ) ) {
 				// Skip all resources not in $resource_filter
 				if(isset($resource_filter)) {
 					if(!in_array($resource->id, $resource_filter)) {
@@ -185,7 +189,14 @@ var $lang = array();
 					$resource_state_icon = '<span class="pill2 '.$resource->state.'">'.$resource->state.'</span>';
 					// idle ?
 					if (("$resource->imageid" == "1") && ("$resource->state" == "active")) {
-						$resource_state_icon = '<span class="pill2 idle">idle</span>';
+						$resource_state_icon = '<span class="pill2 idle">Idle</span>';
+						$resource_state_for_appliance = "idle";
+					} else if(!$resource->state){
+						$resource_state_for_appliance = "inactive";
+					} else if($resource->state == NULL){
+						$resource_state_for_appliance = "no-res";
+					} else {
+						$resource_state_for_appliance = $resource->state;
 					}
 					// link to resource list
 					$virtualization_vm_action_name = $virtualization->name;
@@ -236,10 +247,14 @@ var $lang = array();
 			
 				if ($appliance->stoptime == 0 || $appliance_resources == 0)  {
 					$state_icon=$active_state_icon;
-					$state_text_value = "active";
+					//$state_text_value = "active/".$resource->state;
+					$state_text_value = $resource_state_for_appliance;
+				} else if($resource->state == NULL) {
+					$state_text_value = "no-res";
 				} else {
 					$state_icon=$inactive_state_icon;
-					$state_text_value = "inactive";
+					//$state_text_value = "inactive/".$resource->state;
+					$state_text_value = $resource_state_for_appliance;
 				}
 				// no resource ip yet ?
 				if ($resource->ip == '0.0.0.0') {
@@ -247,8 +262,8 @@ var $lang = array();
 					$state_text_value = "transition";
 				}
 				// link to image edit
-				if (strlen($image->name) > 29) {
-					$imageros = substr($image->name,0,29).'...';
+				if (strlen($image->name) > 20) {
+					$imageros = substr($image->name,0,8).'...'.substr($image->name, -8);
 				} else {
 					$imageros = $image->name;
 				}
@@ -377,16 +392,20 @@ var $lang = array();
 				$strStart = '';
 				if($appliance_resources !== '0') {
 					$a = $this->response->html->a();
-					$a->handler = 'onclick="wait();"';
+					//$a->handler = 'onclick="wait();"';
 					if ($appliance->stoptime == 0) {
 						$a->title = $this->lang['action_stop'];
 						$a->label = $this->lang['action_stop'];
+						$a->handler = 'onclick="stopServer('.$appliance->id.'); return false;"';
 						//$a->css   = 'disable';
+						$a->css   = 'stop-appliance '.$appliance->id;
 						$a->href  = $this->response->get_url($this->actions_name, 'stop').'&'.$this->identifier_name.'[]='.$appliance->id.''.$tp;
 					} else {
 						$a->title = $this->lang['action_start'];
 						$a->label = $this->lang['action_start'];
 						//$a->css   = 'enable btn-labeled fa fa-play';
+						$a->handler = 'onclick="startServer('.$appliance->id.'); return false;"';
+						$a->css   = 'start-appliance '.$appliance->id;
 						$a->href  = $this->response->get_url($this->actions_name, 'start').'&'.$this->identifier_name.'[]='.$appliance->id.''.$tp;
 					}
 					$strStart = $a->get_string();
@@ -439,7 +458,12 @@ var $lang = array();
 									//$alink->css = 'enable';
 									$alink->css = 'en-app fa fa-plus';
 									$alink->title = preg_replace('~(.*?)<a.*>(.*?)</a>(.*?)~i', '$1$2$3', $p['description']);
-
+									
+									if($plugin_name == "novnc"){
+										$alink->target = "_blank";
+										$alink->css = 'novnc-popup en-app fa fa-plus';
+										$alink->handler = "onclick=\"noVNCPOPUP('".$alink->href."'); return false;\"";
+									}
 									$alink = $alink->get_string();
 									
 									if ($alinkcount == 5) {
@@ -457,24 +481,62 @@ var $lang = array();
 					if ($edit_resource_ip != '') {
 						$edit_resource_ip = '<span id="erip">'.$edit_resource_ip.'</span>';
 					}
-
-					$appliance_link_section = '<br/><div class="appliance_links">'.$edit_resource_ip.' '.$appliance_link_section.'</div>';
+					
+					$appliance_link_section = '<div class="appliance_links">'.$edit_resource_ip.' '.$appliance_link_section.'</div>';
 					if($appliance_db["appliance_comment"] !== '') {
-						$appliance_comment  = $appliance_db["appliance_comment"];
+						$appliance_comment  = ''; //$appliance_db["appliance_comment"];
 						$appliance_comment .= "<hr>";
 						$appliance_comment .= $appliance_link_section;
 					} else {
-						$appliance_comment = "<br/><hr>".$appliance_link_section;
+						$appliance_comment = "<hr>".$appliance_link_section;
 					}
 				}
-				$b[] = array('appliance_id' => $appliance_db["appliance_id"], 'appliance_name' => $appliance_db["appliance_name"], 'appliance_ip' => $resource->ip, 'appliance_values' => $str, 'appliance_comment' => $appliance_comment, 'appliance_virtualization' => $appliance_db["appliance_virtualization"], 'appliance_image' => $image_edit_link, 'appliance_total_memory' => $resource->memtotal, 'appliance_used_memory' => $resource->memused, 'appliance_cpu' => $resource->cpunumber, 'appliance_load' => $resource->load, 'appliance_edit' => $strEdit, 'appliance_start' => $strStart, 'appliance_release' => $release_resource, 'appliance_state' => $state_icon, 'appliance_state_value' => $state_text_value, 'appliance_link_section' => $appliance_link_section,);
+				if(is_numeric($resource->ip)){
+					$resource_ip = "Maestro Network";
+				} else {
+					$resource_ip = $resource->ip;
+				}
+				$b[] = array('appliance_id' => $appliance_db["appliance_id"], 'appliance_name' => $appliance_db["appliance_name"], 'appliance_ip' => $resource_ip, 'appliance_values' => $str, 'appliance_comment' => $appliance_comment, 'appliance_virtualization' => $appliance_db["appliance_virtualization"], 'appliance_image' => $image_edit_link, 'appliance_total_memory' => $resource->memtotal, 'appliance_used_memory' => $resource->memused, 'appliance_cpu' => $resource->cpunumber, 'appliance_load' => $resource->load, 'appliance_edit' => $strEdit, 'appliance_start' => $strStart, 'appliance_release' => $release_resource, 'appliance_state' => $state_icon, 'appliance_state_value' => $state_text_value, 'appliance_link_section' => $appliance_comment,);
 			}
+		}
+			
+			//Precessing appliance table to output in the template
+			$div_html = '';
+			$row_headers = array('ID', 'VM Name', 'VM IP', 'Image', 'Total Memory', 'Memory Used', 'CPU', 'CPU Used', 'Status', '...');
+			$div_html = '<table class="table table-hover nowrap dataTable dtr-inline" id="cloud_appliances_table" role="grid" style="width: 100%;"><thead><tr>';
+			foreach ($row_headers as $head) {
+				$div_html .= '<th>'.$head.'</th>';
+			}
+			$div_html .= '</tr></thead><tbody>';
+			for ($i = 0; $i < count($b); $i++) {
+				$div_html .= '<tr class="hoverbg" id="' . $i . '">';
+				$div_html .= '<td>' . $b[$i]['appliance_id'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_name'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_ip'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_image'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_total_memory'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_used_memory'] . '</td>';
+				$div_html .= '<td>' .  $b[$i]['appliance_cpu'] . '</td>';
+				$div_html .= '<td class="cpu-load">' .  $b[$i]['appliance_load'] . '</td>';
+				$div_html .= '<td class="status ' . $b[$i]['appliance_state_value'] .'"><span>' .  $b[$i]['appliance_state_value'] . '</span></td>';
+				$div_html .= '<td class="toggle-graph" row-id="' . $i . '"><a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+				$div_html .= '<td class="app_start">'.$b[$i]['appliance_start'].'</td>';
+				$div_html .= '<td class="app_edit">'.$b[$i]['appliance_edit'].'</td>';
+				$div_html .= '<td class="app_release">'.$b[$i]['appliance_release'].'</td>';
+				$div_html .= '<td class="app_clone">'.$clonelink.'</td>';
+				$div_html .= '<td class="svaccess">'.$b[$i]['appliance_link_section'].'</td>';
+				$div_html .= '<td class="appliance_id">'.$b[$i]['appliance_id'].'</td>';
+				$div_html .= '</tr>'; 
+			}
+			$div_html .=	'</tbody></table>';
 		}
 		// Filter
 		$virtulization_types = new virtualization();
 		$list = $virtulization_types->get_list();
 		$filter = array();
 		$filter[] = array('', '');
+		$filter[] = array("AWS EC2 Instances", "aws");
+		$filter[] = array("Azure VMs", "azure");
 		foreach( $list as $l) {
 			//$filter[] = array( $l['label'], $l['value']);
 			if (!preg_match('@networkboot@', $l['label'])) {
@@ -483,7 +545,7 @@ var $lang = array();
 				$filter[] = array( $valll, $l['value']);
 			}
 		}
-
+		
 		asort($filter);
 		$select = $this->response->html->select();
 		$select->add($filter, array(1,0));
@@ -536,38 +598,6 @@ var $lang = array();
 		$table->identifier_name = $this->identifier_name;
 		$table->identifier_disabled = $disabled;
 		
-		$div_html = '';
-		
-		$row_headers = array('ID', 'VM Name', 'VM IP', 'Image', 'Total Memory', 'Memory Used', 'CPU', 'CPU Used', 'Status', '...');
-		
-		$div_html = '<table class="table table-hover nowrap dataTable dtr-inline" id="cloud_appliances_table" role="grid" style="width: 100%;"><thead><tr>';
-
-		foreach ($row_headers as $head) {
-			$div_html .= '<th>'.$head.'</th>';
-		}
-		$div_html .= '</tr></thead><tbody>';
-		for ($i = 0; $i < count($b); $i++) {
-			$div_html .= '<tr class="hoverbg" id="' . $i . '">';
-			$div_html .= '<td>' . $i . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_name'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_ip'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_image'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_total_memory'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_used_memory'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_cpu'] . '</td>';
-			$div_html .= '<td>' .  $b[$i]['appliance_load'] . '</td>';
-			$div_html .= '<td class="status ' . $b[$i]['appliance_state_value'] .'">' .  $b[$i]['appliance_state_value'] . '</td>';
-			$div_html .= '<td class="toggle-graph" row-id="' . $i . '"><a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
-			$div_html .= '<td class="app_start">'.$b[$i]['appliance_start'].'</td>';
-			$div_html .= '<td class="app_edit">'.$b[$i]['appliance_edit'].'</td>';
-			$div_html .= '<td class="app_release">'.$b[$i]['appliance_release'].'</td>';
-			$div_html .= '<td class="app_clone">'.$clonelink.'</td>';
-			$div_html .= '<td class="svaccess">'.$b[$i]['appliance_link_section'].'</td>';
-			$div_html .= '<td class="appliance_id">'.$b[$i]['appliance_id'].'</td>';
-			$div_html .= '</tr>'; 
-		}
-		$div_html .=	'</tbody></table>';
-		
 		$d['form']   = $this->response->get_form($this->actions_name, 'select', false)->get_elements();
 		$d['add']    = $add->get_string();
 		$d['table']  = $table;
@@ -590,21 +620,12 @@ var $lang = array();
 
 
 	function getpools() {
-
-		
-        $options = '';
+		$options = '';
 		$appliance = new appliance();
-		
 		$b = array();
-
-		
-
 		$disabled = array();
 		$appliances = $appliance->display_overview(0, 10000, 'appliance_id', 'ASC');
 		foreach ($appliances as $index => $appliance_db) {
-
-
-			
 			$appliance = new appliance();
 			$appliance->get_instance_by_id($appliance_db["appliance_id"]);
 			$resource = new resource();
@@ -622,14 +643,12 @@ var $lang = array();
 			$edit_resource_ip = '';
 
 			if ($this->response->html->request()->get('resource_type_filter') === '' || ($this->response->html->request()->get('resource_type_filter') == $resource->vtype )) {
-
 				// Skip all resources not in $resource_filter
 				if(isset($resource_filter)) {
 					if(!in_array($resource->id, $resource_filter)) {
 						continue;
 					}
 				}
-
 				if ($appliance_resources >=0) {
 					// an appliance with a pre-selected resource
 					$resource->get_instance_by_id($appliance_resources);
@@ -696,8 +715,6 @@ var $lang = array();
 				}
 
 				// link to image edit
-
-
 				if (strlen($image->name) > 29) {
 					$imageros = substr($image->name,0,29).'...';
 				} else {
@@ -728,7 +745,6 @@ var $lang = array();
 					}
 				}
 
-
 				// appname my code here:
 				if (strlen($appliance_db["appliance_name"]) > 18) {
 					$spanname = substr($appliance_db["appliance_name"], 0, 18);
@@ -740,25 +756,14 @@ var $lang = array();
 				
 
 				$vname = $appliance_virtualization_name;
-
 				$id = $appliance_db["appliance_id"];
 				$name = $appliance_db["appliance_name"];
-
 				if ( ( preg_match('@Host@', $vname)) && ($id != 1) ) {
 					$options .= '<option value="'.$id.'">'.$name.'</option>';
 				}
-
-				
-
-				
 			}
-
 		}
-
-		
 		return $options;
 	}
-
-
 }
 ?>

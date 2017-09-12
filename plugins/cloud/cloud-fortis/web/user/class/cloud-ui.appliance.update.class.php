@@ -87,19 +87,24 @@ var $actions_name = 'cloud-ui';
 			if(isset($response->msg)) {
 				$this->response->redirect($this->response->get_url($this->actions_name, 'appliances', $this->message_param, $response->msg));
 			}
-			$t = $this->response->html->template($this->tpldir."/cloud-ui.appliance-update.tpl.php");
-			$t->add($response->form->get_elements());
-			$t->add($response->html->thisfile, "thisfile");
-		 	$t->add($this->lang['appliances']['label_update_notice'],  "label_update_notice");
-			$t->add($this->lang['appliances']['update_cpu_notice'],  "update_cpu_notice");
-			if(isset($response->disk_resize))  {
-				$t->add($this->lang['appliances']['update_disk_notice'],  "update_disk_notice");
-			}  else  {
-				$t->add('',  "update_disk_notice");
+
+			if ($response->appliance_state == 1) {
+				return '<span>To update this instance, please pause it first.</span>';
+			} else {
+				$t = $this->response->html->template($this->tpldir."/cloud-ui.appliance-update.tpl.php");
+				$t->add($response->form->get_elements());
+				$t->add($response->html->thisfile, "thisfile");
+			 	$t->add($this->lang['appliances']['label_update_notice'],  "label_update_notice");
+				$t->add($this->lang['appliances']['update_cpu_notice'],  "update_cpu_notice");
+				if(isset($response->disk_resize))  {
+					$t->add($this->lang['appliances']['update_disk_notice'],  "update_disk_notice");
+				}  else  {
+					$t->add('',  "update_disk_notice");
+				}
+				$t->add(sprintf($this->lang['appliances']['label_update'],$response->appliance), 'label');
+				$t->group_elements(array('param_' => 'form'));
+				return $t;
 			}
-			$t->add(sprintf($this->lang['appliances']['label_update'],$response->appliance), 'label');
-			$t->group_elements(array('param_' => 'form'));
-			return $t;
 		}
 	}
 
@@ -112,12 +117,24 @@ var $actions_name = 'cloud-ui';
 	 */
 	//--------------------------------------------
 	function update() {
-		$this->ca_id = $this->response->html->request()->get($this->identifier_name);
-		$this->response->add($this->identifier_name, $this->ca_id);
-		$this->cloudappliance->get_instance_by_id($this->ca_id);
-		$this->appliance->get_instance_by_id($this->cloudappliance->appliance_id);
-		$this->cloudrequest->get_instance_by_id($this->cloudappliance->cr_id);
-
+		
+		$response = $this->get_response();
+		
+		if($response->submit()){
+			$this->ca_id = $this->response->html->request()->get($this->identifier_name);
+			$this->response->add($this->identifier_name, $this->ca_id);
+			$this->cloudappliance->get_instance_by_id($this->ca_id);
+			$this->appliance->get_instance_by_id($this->cloudappliance->appliance_id);
+			$this->cloudrequest->get_instance_by_id($this->cloudappliance->cr_id);
+		} else {
+		
+			$this->ca_id = $this->response->html->request()->get($this->identifier_name);
+			$this->response->add($this->identifier_name, $this->ca_id[0]);
+			$this->cloudappliance->get_instance_by_id($this->ca_id[0]);
+			$this->appliance->get_instance_by_id($this->cloudappliance->appliance_id);
+			$this->cloudrequest->get_instance_by_id($this->cloudappliance->cr_id);
+		}
+		
 		// check appliance belongs to user
 		if ($this->cloudrequest->cu_id != $this->clouduser->id) {
 			$response = $this->response;
@@ -126,6 +143,14 @@ var $actions_name = 'cloud-ui';
 			$response = $this->get_response();
 			$form = $response->form;
 			if(!$form->get_errors() && $response->submit()) {
+				
+				/*echo "<br /> After Submit <br />";
+				echo $this->ca_id . "HTBase CA ID <br />";
+				echo $this->cloudrequest->cu_id . " HTBase " . $this->cloudrequest->id . "<br />";
+				echo $this->clouduser->id . " HTBase <br />";
+				echo "<br /> After Submit <br />"; die();*/
+				
+				
 				$comment = $form->get_request('comment');
 				$cpu     = $form->get_request('cpu');
 				$memory  = $form->get_request('memory');
@@ -203,6 +228,7 @@ var $actions_name = 'cloud-ui';
 				$response->msg = sprintf($this->lang['appliances']['msg_updated_appliance'], $this->appliance->name);
 			}
 			$response->appliance = $this->appliance->name;
+			$response->appliance_state = $this->cloudappliance->state;
 		}
 		return $response;
 	}

@@ -334,6 +334,24 @@ div#aws-log table.log-table td {
 	width: auto;
 }
 
+#cloud-price-legend{
+	float: left;
+	background: #fff;
+	width: 99%;
+	border-top: 1px solid #e7ebee;
+	border-bottom: 1px solid #e7ebee;
+}
+#cloud-price-legend span {
+	display: inline-block;
+	padding: 15px 30px;
+	position: relative;
+}
+#cloud-price-legend span:after {
+	padding-left: 4px;
+	content: '\00a0\00a0\00a0\00a0\00a0\00a0';
+	text-decoration: line-through;
+}
+
 /*
 https://github.com/Azure-Samples/virtual-machines-python-manage/blob/master/example.py
 */

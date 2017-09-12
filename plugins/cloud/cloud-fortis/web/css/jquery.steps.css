@@ -189,7 +189,7 @@
 
 .wizard > .content > .body input, .wizard > .content > .body select
 {
-    display: block;
+    display: inline-block;
     border: 1px solid #ccc;
 }
 

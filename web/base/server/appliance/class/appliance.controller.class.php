@@ -56,7 +56,7 @@ var $tpldir;
 var $lang = array(
 	'select' => array (
 		'tab' => 'Server',
-		'label' => 'Server',
+		'label' => 'Servers',
 		'action_remove' => ' remove',
 		'action_start' => ' Start',
 		'action_stop' => ' Stop',
@@ -380,6 +380,103 @@ var $lang = array(
 		$this->response = $response;
 		$this->file     = $this->htvcenter->file();
 		$this->lang     = $this->user->translate($this->lang, $this->rootdir."/server/appliance/lang", 'appliance.ini');
+		
+		//Processing Instances from AWS
+		if(isset($_GET['awsec2'])){
+			$disk_info_dump = shell_exec('python '.$this->rootdir.'/server/cloud/script/scanawsinstance.py');
+			$disk_info = json_decode($disk_info_dump, true);
+			if(empty($disk_info)){
+				$html_information .= "<div class='nothing-found'>Currenly no Instance available on AWS</div>";
+			} else {
+				$count = 1;
+				$aws_instance_table = '<table class="table table-hover nowrap dataTable dtr-inline" id="aws_instance_table" role="grid" style="width: 100%;"><thead><tr>';
+				$aws_instance_table .= '<th></th><th>Instance ID</th><th>Name</th><th>Public IP</th><th>Status</th><th>...</th></tr></thead><tbody>';
+				foreach($disk_info as $k => $v){
+					$temp = explode("_", $v);
+					$vm_status = str_replace(array("{", "}", "u", "'"), "", $temp[3]);
+					$vm_status = explode(",", $vm_status);
+					$vm_status = str_replace(array('Code', ':', ' '), "", $vm_status[0]);
+				
+					if($vm_status == 16){
+						$vm_status_class = 'active';
+					} else if($vm_status == 80 || $vm_status == 48){
+						$vm_status_class = 'stopped';
+					}
+					$serializeEc2ID = serialize($temp[0]);
+					$aws_instance_table .= '<tr class="hoverbg" id="' . $count . '">';
+					$aws_instance_table .= '<td>' . $count. '</td>';
+					$aws_instance_table .= '<td>' . $temp[0]. '</td>';
+					$aws_instance_table .= '<td>' . $temp[1]. '</td>';
+					$aws_instance_table .= '<td>' . $temp[2]. '</td>';
+					$aws_instance_table .= '<td class="vm'.$vm_status_class.'">' . $vm_status_class. '</td>';
+					$aws_instance_table .= '<td class="aws-toggle-graph" row-id="' . $count . '"><a><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+					$aws_instance_table .= "<td><a class='aws-vm-details-popup' href='index.php?base=cloud&cloud_action=awsinstance&ec2_id=".serialize($temp[0])."'> details</a></td>";
+					$aws_instance_table .= "<td><a class='aws-disk-details-popup' href='index.php?base=cloud&cloud_action=awsdisk&ec2_id=".serialize($temp[0])."'> disk</a></td>";
+					$aws_instance_table .= "<td><a class='aws-log-popup' href='index.php?base=cloud&cloud_action=awslog&ec2_id=".serialize($temp[0])."'> log</a></td>";
+					$aws_instance_table .= '</tr>'; 
+					$count++;
+				}
+				$aws_instance_table .= "</tbody></table>";
+			}
+			echo $aws_instance_table;
+			die();
+		}
+		
+		//Processing VMs from Azure
+		if(isset($_GET['azurevm'])){
+			$vm_info_dump = shell_exec('python '.$this->rootdir.'/server/cloud/script/listazurevm.py');
+			$vm_info = json_decode($vm_info_dump, true);		
+			if(empty($vm_info)){
+				$html_information .= "<div class='nothing-found'>Currenly no VM available on Azure</div>";
+			} else {
+				$count = 1;
+				$azure_vm_table = '<table class="table table-hover nowrap dataTable dtr-inline" id="azure_vm_table" role="grid" style="width: 100%;"><thead><tr>';
+				$azure_vm_table .= '<th></th><th>VM Name</th><th>Location</th><th>Public IP</th><th>Status</th><th>...</th></tr></thead><tbody>';
+				foreach($vm_info as $k => $v){
+					$temp = explode("_*_", $v);
+				
+					$vm_status = str_replace(array("VM", " "), "", $temp[5]);
+				
+					if($vm_status == "running"){
+						$vm_status_class = 'active';
+					} else {
+						$vm_status_class = 'stopped';
+					}
+					$param = serialize(array($temp[0], $temp[6], $temp[3]));
+					$azure_vm_table .= '<tr class="hoverbg" id="' . $count . '">';
+					$azure_vm_table .= '<td>' . $count. '</td>';
+					$azure_vm_table .= '<td>' . $temp[0]. '</td>';
+					$azure_vm_table .= '<td>' . $temp[1]. '</td>';
+					$azure_vm_table .= '<td>' . $temp[7]. '</td>';
+					$azure_vm_table .= '<td class="vm'.$vm_status_class.'">' . $vm_status_class. '</td>';
+					$azure_vm_table .= '<td class="azure-toggle-graph" row-id="' . $count . '"><a><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+					$azure_vm_table .= "<td><a class='azure-vm-details-popup' href='index.php?base=cloud&azure_vm=".$param."'> details</a></td>";
+					$azure_vm_table .= "<td><a class='az-disk-details-popup' href='index.php?base=cloud&cloud_action=azuredisk&azure_vm=".$param."'> disk</a></td>";
+					$azure_vm_table .= "<td><a class='az-log-popup' href='index.php?base=cloud&cloud_action=azurelog&azure_vm=".$param."'> log</a></td>";
+					$azure_vm_table .= '</tr>'; 
+					$count++;
+				}
+				$azure_vm_table .= "</tbody></table>";
+			}
+			echo $azure_vm_table;
+			die();
+		}
+		
+		if( isset($_GET['cpuload']) ){
+			$cpuload = array();
+			$appliance = new appliance();
+			$appliances = $appliance->display_overview(0, 10000, 'appliance_id', 'ASC');
+			foreach ($appliances as $index => $appliance_db) {
+				$appliance = new appliance();
+				$appliance->get_instance_by_id($appliance_db["appliance_id"]);
+				$resource = new resource();
+				$resource->get_instance_by_id($appliance->resources);
+				$cpuload[$appliance_db["appliance_id"]] = $resource->load;
+			}
+			echo json_encode($cpuload);
+			die();
+		}
+		
 	}
 
 	//--------------------------------------------

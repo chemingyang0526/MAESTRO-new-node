@@ -115,7 +115,8 @@ if [ "$action" == 'remove' ]; then
 	numeo=$(($num - 2)) 
 	rm -rf /var/lib/kvm/storage1/${vmname}vol$numeo
 	rm -rf /var/lib/kvm/htvcenter/$vmname/disk$num
-	rm -rf /usr/share/htvcenter/storage/${vmname}vol$numeo
+	#rm -rf /usr/share/htvcenter/storage/${vmname}vol$numeo
+	rm -rf /usr/share/htvcenter/storage/${vmname}vol$num
 	echo "KVM_VM_DISK_$num=\"\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 	echo "KVM_VM_DISK_SIZE_$num=\"\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 fi

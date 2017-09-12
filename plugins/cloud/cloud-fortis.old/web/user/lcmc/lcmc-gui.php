@@ -1,1 +1,0 @@
-/usr/share/htvcenter/plugins/lcmc/web/lcmc-gui.php

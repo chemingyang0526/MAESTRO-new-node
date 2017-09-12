@@ -3238,7 +3238,6 @@ $('#schedulertbtn').click(function(){
 // add citrix:
 
 		$('.citrixaddp').click(function(e) {
-			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=citrix&controller=citrix-discovery&citrix_discovery_action=add';
@@ -3260,7 +3259,6 @@ $('#schedulertbtn').click(function(){
 
 // add vmware:
 	$('.vmwareaddp').click(function(e) {
-			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=vmware-esx&controller=vmware-esx-discovery&vmware_esx_discovery_action=add';
@@ -3280,7 +3278,6 @@ $('#schedulertbtn').click(function(){
 // add hyperv:
 	
 	$('.hypervaddp').click(function(e) {
-			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=hyperv&controller=hyperv-discovery&hyperv_discovery_action=add';
@@ -3969,10 +3966,9 @@ $('#resource_tab0 .submit').click(function(e){
   		}
 
   		
-
   		var string = 'index.php?base=resource&resource%5Blimit%5D=20&resource%5Boffset%5D=0&resource%5Border%5D=ASC&resource%5Bsort%5D=resource_id&resource_action=select&resource_action%5B'+action+'%5D='+action+'&'+identifiers;
-  		console.log(string);
-  		$('#storageform').load(string+" #resource_tab1", function(){
+		console.log(string);
+		$('#storageform').load(string+" #resource_tab1", function(){
 	  			
 	  			$('#storageform select').selectpicker();
 	  			$('#storageform select').hide();
@@ -4095,7 +4091,6 @@ $('#resource_tab0 .submit').click(function(e){
   		});  		
   	});
   // --- end new storage popup ---
-
 
   // volumepopup:
   	$('#volumepopupbtn a').click(function(e){
@@ -5071,7 +5066,6 @@ function colorborder(objc) {
 			if (objc.find('.pill').hasClass('active')) {
 				color = '#9cc96b';
 				vlasso = 'panel-success';
-				console.log('aaaaa');
 			}
 
 			if (objc.find('.pill').hasClass('error')) {

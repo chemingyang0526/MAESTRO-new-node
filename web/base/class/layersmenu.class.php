@@ -1419,7 +1419,7 @@ function newTreeMenu(
 					break;
 
 					case 'Misc':
-						$faicon = 'fa-ellipsis-h';
+						$faicon = 'fa-qrcode';
 						$label = '';
 					break;
 
@@ -1440,7 +1440,7 @@ function newTreeMenu(
 					break;
 					
 					case 'Multi-Cloud':
-						$faicon = 'fa-cogs';
+						$faicon = 'fa-object-group';
 						$label = '';
 						$this->tree[$cnt]['text'] = 'Multi Cloud';
 					break;

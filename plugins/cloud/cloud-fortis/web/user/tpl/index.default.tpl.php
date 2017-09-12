@@ -31,8 +31,8 @@
 <link type="text/css" href="{baseurl}/css/nifty.css" rel="stylesheet">
 -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
-<!--<link rel="icon" href="{baseurl}/img/favicon.ico?v=9" type="image/x-icon"> -->
-<link rel="shortcut icon" href="{baseurl}/img/score-icon.png?v=2" type="image/png">
+<link rel="icon" href="{baseurl}/img/favicon.ico?v=2" type="image/x-icon">
+<!--<link rel="shortcut icon" href="{baseurl}/img/favicon.ico?v=3" type="image/x"> -->
 
 	<!--Morris.js [ OPTIONAL ]
 	<link href="{baseurl}designplugins/morris-js/morris.min.css" rel="stylesheet"> -->
@@ -154,12 +154,14 @@
                             <i class="fa fa-search"></i><span>Explorer</span>
                         </a>
                     </li>
+                    <!--
                     <li>
                         <a class="dropdown-item" href="{baseurl}user/index.php?report=report_budget">
                             <i class="fa fa-credit-card"></i><span>Budget</span>
                         </a>
                     </li>
-                </ul>              
+                    -->
+                </ul>
             </div>
 
             <div class="cat__top-bar__item hidden-sm-down pull-right dropdown">
@@ -260,8 +262,6 @@
     								<div id="buttons"><input type="submit" value="Report" class="submit" id="orderreport"></div>
     							</div>
                             </div>
-
-                            
                         </div>
                     </div>
                 </div>
@@ -349,7 +349,7 @@
                             <i class="fa fa-credit-card dropfa faexplorer"></i>
                             <span class="headspan">Budget</span>
                         </a>
-                    </li>            
+                    </li>
                 </ul>
             </div>
         <div class="nano-pane" style="display: block;"><div class="nano-slider" style="height: 193px; transform: translate(0px, 0px);"></div></div></div>

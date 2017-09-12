@@ -63,7 +63,7 @@
 </script>
 <h2>{appliances_configuration}</h2>
 
-<form action="{thisfile}">
+<form action="{thisfile}" id="ip-mgmt-config">
 {form}
 {appliance_id}
 {select_0}

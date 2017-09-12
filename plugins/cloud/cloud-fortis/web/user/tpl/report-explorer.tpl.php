@@ -13,7 +13,7 @@ var explorer = true;
 $(document).ready(function() {
 	var dt = $("#score_cloud_appliances_table").DataTable( {
 		"columns": [
-				null, null, null, null, null, null, null, null, null,
+				null, { "visible": false }, null, null, null, null, null, null, null,
 		],
 		"order": [], "bLengthChange": false, "pageLength": 20, "search": { "regex": true }, "bAutoWidth": true
 	});

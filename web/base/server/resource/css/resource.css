@@ -15,3 +15,11 @@
 #resource_type_filter {
 	margin: 0 0 30px 0 !important;
 }
+
+
+div#resource_tab1 div#buttons div.htmlobject_box div.left {
+	margin-left: 0px;
+}
+#add-new-resource a.add {
+	right: 15% !important;
+}

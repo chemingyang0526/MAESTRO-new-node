@@ -16,8 +16,7 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
  */
 
-class addawsinstance
-{
+class addawsinstance {
 /**
 * name of action buttons
 * @access public
@@ -168,6 +167,8 @@ var $lang = array();
 			array('MaestroClient Ubuntu 16', 'ami-ac3e38d7'),
 			array('MaestroClient CentOS 6', 'ami-023e3879'),
 			array('MaestroClient CentOS 7', 'ami-203f395b'),
+			array('Ubuntu Server 16.04 LTS (HMV)', 'ami-cd0f5cb6'),
+			array('Ubuntu Server 14.04 LTS (HVM), SSD Volume Type', 'ami-841f46ff'),
 		); 
 		$d['aws_ami_id']['label']                            = $this->lang['aws_ami_id'];
 		$d['aws_ami_id']['required']                         = true;

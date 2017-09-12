@@ -1460,7 +1460,6 @@ td.network_manager_identifier input.checkbox {
 	#storageform #puppet_groups .right, #storageformaddn #puppet_groups .right {
 		 float: right;
 	    position: relative;
-	    top: -20px;
 	    width: 0;
 	}
  
@@ -1832,6 +1831,7 @@ td.kvm_identifier a {
 #volumepopup, #volumepopupvmf, #volumepopupwmware, #volumepopupmigr, #storageformkvm, #storageformkvmrem, #serverpopup, #volumepopupz, #volumepopuprem, #volumepopupzmail, #volumepopupnagios, #schedulerpopup, #trasherzconfirm, #trasherzconfirmhost, #poolservpopup, #schedulerconfirmpopup, #configpopup, #integratepopup, #volschedulerpopup, #volumepopupaddn {
 	/*width: 600px;*/
 	width: 50%;
+	min-width: 600px;
 	position: fixed;
 	top: 20%;
 	left: 25%;
@@ -4807,7 +4807,7 @@ div#btnsideee {
     border-color: #5fa2dd !important;
     color: #ffffff !important;
        position: relative;
-    right: 38px !important;
+    right: 5% !important;
     top: 10px;
 }
 

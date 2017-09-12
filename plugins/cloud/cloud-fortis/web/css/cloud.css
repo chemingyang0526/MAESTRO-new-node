@@ -432,7 +432,7 @@ background: #ddd none repeat scroll 0 0;
 	cursor: pointer;
 }
 
-.htmlobject_td.state .pill {
+.pill {
 	padding: 2px 8px;
 	color: #fff;
 	font-size: 10px;
@@ -444,16 +444,16 @@ background: #ddd none repeat scroll 0 0;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
 }
-.htmlobject_td.state .pill.active {
+.pill.active {
 	background: #8cc63f;
 }
-.htmlobject_td.state .pill.paused {
+.pill.paused {
 	background: #ff5800;
 }
-.htmlobject_td.state .pill.new {
+.pill.new {
 	background: #223e99;
 }
-.htmlobject_td.state .pill.busy {
+.pill.busy {
 	background: #cccccc;
 	color: black;
 }

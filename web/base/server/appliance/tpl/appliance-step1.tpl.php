@@ -38,12 +38,15 @@
 </form>
 <script>
 	function validateServerName(){
+		$(".name-error").remove();
 		var serverName = $("div#step1 #name").val();
 		if (serverName == ""){
-			alert("Server name can not be empty");
+			//alert("Server name can not be empty");
+			$("div#appliance_tab1 div#step1 div#name_box").append("<span class='name-error'>Server name can not be empty</span>");
 			return(false);
 		} else if (serverName.indexOf(' ') >= 0) {
-			alert("Server name can not have space");
+			//alert("Server name can not have space");
+			$("div#appliance_tab1 div#step1 div#name_box").append("<span class='name-error'>Server name can not have space</span>");
 			return(false);
 		}
 		else {

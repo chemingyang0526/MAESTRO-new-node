@@ -179,8 +179,9 @@ var $lang;
 				$href_configure = $this->response->html->a();
 				$href_configure->label = $this->lang['ip_mgmt_configure'];
 				$href_configure->href = $this->response->get_url($this->actions_name, "configure").'&'.$this->identifier_name.'[]='.$appliance->id;
-				$href_configure->css = 'edit';		
-				$href_configure->title = $this->lang['ip_mgmt_configure'];	
+				$href_configure->css = 'edit ip-mgmt-edit';		
+				$href_configure->title = $this->lang['ip_mgmt_configure'];
+				$href_configure->handler = "onclick=\"configPopUp('".$href_configure->href."'); return false;\"";
 				$configure = $href_configure->get_string();
 
 				$arBody[] = array(

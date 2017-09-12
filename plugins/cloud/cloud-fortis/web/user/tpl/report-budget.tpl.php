@@ -28,7 +28,7 @@
         font-weight: 100;
     }
     .plan .plan-icon {
-        padding: 1em 0;
+        padding: 0.5em 0;
     }
 </style>
 <link href="/cloud-fortis/css/jquery.steps.css" rel="stylesheet" type="text/css">
@@ -140,7 +140,7 @@ $(document).ready(function() {
         </div>
         <div class="modal-body">
             <form id="create-budget-form">
-                <h3>Step 1</h3>
+                <h3>Name & Timeframe</h3>
                     <section>
                         <!--<div class="row"> -->
                             <div class="col-lg-12">
@@ -170,7 +170,7 @@ $(document).ready(function() {
                         <!-- </div> -->
                     </section>
 
-                <h3>Step 2</h3>
+                <h3>Budget Limits</h3>
                     <section>
 
                         <div class="col-lg-12">
@@ -251,16 +251,13 @@ $(document).ready(function() {
                         </div>
                             
                     </section>
-                <h3>Step3</h3>
+                <h3>Alerts</h3>
                     <section>
-                        <!-- <div class="row">  -->
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="cloud_disk_select">Disk *</label>
-                                    {cloud_disk_select}
-                                </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <span>Notify me when costs exceed&nbsp;</span><input type="text" id="percentbudg"><span>&nbsp;% of budgeted costs</span>
                             </div>
-                        <!-- </div> -->
+                        </div>
                     </section>
             </form>
         </div>

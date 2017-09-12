@@ -1,5 +1,16 @@
     <style>
         #project_tab_ui { display: none; }  /* hack for tabmenu issue */
+
+        #lifetime-spent-gauge {
+            display: table;
+            margin: 0 auto;
+        }
+
+        #lifetime-spent-gauge span {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle
+        }
     </style>
 <script src="/cloud-fortis/js/c3/d3.v3.min.js" type="text/javascript"></script>
 <script src="/cloud-fortis/js/c3/c3.min.js" type="text/javascript"></script>
@@ -507,7 +518,7 @@ $(document).ready(function () {
         current_month.setMonth(i);
         current_month.setDate(1);
         column_x_yearly.push(parseDate(current_month,'Y-M-D'));
-        deferred.push(get_monthly_data(parseDate(current_month,'Y'), parseDate(current_month,'m')));
+        deferred.push(get_monthly_data(parseDate(current_month,'Y'), parseDate(current_month,'mon')));
     }
     column_x_3months.push(parseDate(last_month,'Y-M-D'), parseDate(this_month,'Y-M-D'), parseDate(next_month,'Y-M-D'));
 
@@ -516,7 +527,6 @@ $(document).ready(function () {
 
         for (var j = 0; j < objects.length; j++) {
             var json = JSON.parse(objects[j][0]);
-
             total_monthly.push(to_num(json.all));
             cpu_monthly.push(to_num(json.cpu));
             storage_monthly.push(to_num(json.storage));
@@ -526,14 +536,29 @@ $(document).ready(function () {
         }
 
         current_year_monthly_spent("#current-year-monthly-spent", [column_x_yearly, total_monthly]);
-        
         current_year_monthly_spent_by_resource("#current-year-monthly-spent-by-resource", [column_x_yearly, cpu_monthly, storage_monthly, memory_monthly, virtual_monthly, network_monthly]);
+        var last_month_cost = parseFloat(total_monthly.slice(-2)[0]);
+        var this_month_cost = parseFloat(total_monthly.slice(-1)[0]);
         
-        // future data supposed to come from same source?
-        current_year_three_months_spent("#current-three-months-spent", [column_x_3months, ['total', total_monthly.slice(-3)[0],total_monthly.slice(-2)[0],total_monthly.slice(-1)[0]]]);
-        
+        // next month's cost projection is the average of past two month, or the last month if no data from two month ago
+        next_month_cost = (last_month_cost > 0 && this_month_cost > 0 ? (this_month_cost + last_month_cost) / 2 : (this_month_cost > 0 ? this_month_cost : 0 )); 
+        current_year_three_months_spent("#current-three-months-spent", [column_x_3months, ['total', last_month_cost, this_month_cost, next_month_cost]]);
         current_month_spent_by_resource("chartdiv-this-month-chart", [[cpu_monthly[0], storage_monthly[0], memory_monthly[0],virtual_monthly[0], network_monthly[0]], [cpu_monthly.slice(-1)[0], storage_monthly.slice(-1)[0], memory_monthly.slice(-1)[0], virtual_monthly.slice(-1)[0], network_monthly.slice(-1)[0]]]);
-        lifetime_spent("#lifetime-spent-gauge", objects); 
+        // lifetime_spent("#lifetime-spent-gauge", objects); 
+
+        var yearly_sum = 0.0;
+
+        for (var k = 1; k < total_monthly.length; k++) {
+
+            // console.log(total_monthly[k]);
+            // console.log(yearly_sum);
+
+            yearly_sum = yearly_sum + parseFloat(total_monthly[k]);
+        }
+
+
+
+        $("#yearly-spending h2").text("$" + yearly_sum.toFixed(2));
     });
 });
 </script>
@@ -725,7 +750,7 @@ $(document).ready(function () {
                             <section class="card">  
                                 <div class="card-header">
                                     <span class="cat__core__title">
-                                        <strong>Lifetime Spending</strong>
+                                        <strong>Current Yearly Spending</strong>
                                     </span>
                                 </div>
                                 <div class="card-block">
@@ -735,7 +760,9 @@ $(document).ready(function () {
                                         <h3 class="panel-title">&nbsp;</h3>
                                     </div>
                                     <div>
-                                        <div id="lifetime-spent-gauge" style="height: 16rem;"></div>
+                                        <div id="lifetime-spent-gauge" style="height: 16rem;">
+                                            <span id="yearly-spending"><h2 class="text-black"></h2></span>
+                                        </div>
                                     </div>
                                 </div>
                             </section>

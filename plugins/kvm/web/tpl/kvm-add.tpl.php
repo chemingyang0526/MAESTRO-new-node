@@ -16,7 +16,7 @@
 //-->
 <h2>{label}</h2>
 <div id="form">
-	<form action="{thisfile}" method="GET">
+	<form action="{thisfile}" method="GET" id="volgroupid">
 		{form}
 		{name}
 		{type}
@@ -24,3 +24,9 @@
 	<div id="buttons">{submit}&#160;{cancel}</div>
 </div>
 </form>
+
+<script>
+	function volGroupValidate(){
+		return (true);
+	}
+</script>

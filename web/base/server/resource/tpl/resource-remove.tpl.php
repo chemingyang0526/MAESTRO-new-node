@@ -16,18 +16,14 @@
 //-->
 <h2>{label}</h2>
 <form action="{thisfile}">
-
 	<div id="form">
-	{form}
+		{form}
 	</div>
-
 	<div id="buttons">
-	<hr>
-	<br>
-	{force_remove}
-	<br>
-	{submit}
-	{cancel}
+		<hr>
+		{force_remove}
+		<br>
+		{submit}
+		{cancel}
 	</div>
-
 </form>

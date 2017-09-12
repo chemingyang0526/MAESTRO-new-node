@@ -172,49 +172,14 @@
 
 <script>
 $(document).ready(function() {
-		
-	function format (d) {
-	
-		var onclickHtml = '<section class="card-maestro">'+
-		'<div class="card-header card-header-top">'+
-			
-			'<div class="d-inline-block col-sm-3 text-left">'+
-				'<span>'+d[1]+'</span>'+
-			'</div>'+
-			'<div class="d-inline-block col-sm-9 text-right">';
-				if (d[10]){
-					if (d[10].indexOf('stop') !== -1){
-						onclickHtml = onclickHtml + '<span><i class="fa fa-stop"></i> '+d[10]+'</span>';
-					} else {
-						onclickHtml = onclickHtml + '<span><i class="fa fa-play"></i> '+d[10]+'</span>';
-					}
-				}
-				if (d[11]){
-					onclickHtml = onclickHtml + '<span><i class="fa fa-edit"></i> '+d[11]+'</span>';
-				}
-				if (d[12]) {
-					onclickHtml = onclickHtml + '<span><i class="fa fa-refresh"></i> '+d[12]+'</span>';
-				}
-				if (d[13]) {
-					onclickHtml = onclickHtml + '<span class="clonera"><i class="fa fa-clone"></i> Clone</span> <span class="protera"><i class="fa fa-files-o"></i> Snapshot</span>';
-				}
-				if (d[14]) {
-					onclickHtml = onclickHtml + '<span><i class="fa fa-clone"></i> '+d[14]+'</span>';
-				}
-				onclickHtml = onclickHtml + '</div>'+
-			'</div>'+
-		'</section>';
-		return onclickHtml;
-	}
-	
 	function formatPopOver (d) {
 		var img_text = jQuery(d[3]).text();
 		var onclickHtml = '<ul class="appliance-pop-over-menu">';
 		if (d[10]){
 			if (d[10].indexOf('stop') !== -1){
-				onclickHtml = onclickHtml + '<li class="fa fa-stop"> '+d[10]+'</li>';
+				onclickHtml = onclickHtml + '<li class="fa fa-stop app-stop"> '+d[10]+'</li>';
 			} else {
-				onclickHtml = onclickHtml + '<li class="fa fa-play"> '+d[10]+'</li>';
+				onclickHtml = onclickHtml + '<li class="fa fa-play app-start"> '+d[10]+'</li>';
 			}
 		}
 		if (d[11]){
@@ -248,7 +213,7 @@ $(document).ready(function() {
 				{ "visible": false },
 				{ "visible": false },
 		],
-		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 		"fnDrawCallback": function( oSettings ) {
 			$(".toggle-graph a").popover({
 				html: true,
@@ -261,21 +226,6 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
-	/*$(".toggle-graph a").click(function () {
-		var tr = $(this).closest('tr');
-		var row = dt.row( tr );
-		var row_id = tr.attr("id");
-	
-		if (row.child.isShown()) {
-			tr.removeClass('details');
-			row.child.hide();
-		} else {
-			tr.addClass('details');
-			row.child( format(row.data()) ).show();
-			row.child().addClass('hv-bg')
-		}
-	});*/
 	
 	var delay = (function(){
 		var timer = 0;
@@ -293,17 +243,50 @@ $(document).ready(function() {
 			}, 300);
 		});
 	});
+	
+	function refreshCPU() {
+		$.ajax({
+		  url: 'index.php?base=appliance&cpuload=1',
+		})
+		.done(function(d) {
+			var cpuLoad = jQuery.parseJSON(d);
+			//alert(cpuLoad);
+			var count = 0;
+			var table = $('#cloud_appliances_table').DataTable();
+			table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+			   var data = this.data();
+			   data[7] = cpuLoad[data[0]];
+			   //data[9] = d[9];
+			   this.data(data).draw();
+			   count = count + 1;
+			} );
+		})
+		.fail(function() {
+			alert("Failed to load");
+		});
+	}
+	
+	setInterval(refreshCPU,10000);
 
+	function getParameterByName(name, url) {
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	
 	function noVNCPOPUP(url) {
-		//path = "{url}";
-		noVncWindow = window.open(url, "noVnc_{port}", "titlebar=no, location=no, scrollbars=yes, width=800, height=500, top=50");
+		//alert(url);
+		var id = getParameterByName('appliance_id', url) ;
+		var l = '/htvcenter/base/api.php?action=plugin&plugin=novnc&controller=novnc&novnc_action=console&appliance_id='+id;
+		noVncWindow = window.open(l, "noVnc_{port}", "titlebar=no, location=no, scrollbars=yes, width=800, height=500, top=50");
 		noVncWindow.focus();
 	}
-	$('a#novnc-popup').on('click', function(){
+	$('a.novnc-popup').click(function(){
 		var storagelink = $(this).attr('href');
 		noVNCPOPUP(storagelink);
- 		/*$('#novncpopup').load(storagelink);
-		$('#volumepopupvnc').show();*/
 		return false;
 	});
 	$('#volumepopupvncclose').click(function(){
@@ -339,13 +322,38 @@ $(document).ready(function() {
 		$('#volumepopupaddn').hide();
 	});
 	
+	function startServer(id){
+		var id = id;
+		var urlstring = 'index.php?base=appliance&resource_filter=&appliance_action=start&appliance_identifier[]='+id;
+		$('#storageformvmf').load(urlstring+" form#app-start-form", function(){
+			$('.lead').hide();
+			$('#actionvmf').html('<div class="start-stop-ction"><label>Action</label> <div class="alcontent"><i class="fa fa-play"></i> Start </div><br/></div>');
+			$('#storageformvmf select').selectpicker();
+			$('#storageformvmf select').hide();
+			$('#volumepopupvmf').show();
+		}); 
+	}
+	
+	function stopServer(id){
+		var id = id;
+		var urlstring = 'index.php?base=appliance&resource_filter=&appliance_action=stop&appliance_identifier[]='+id;
+		$('#storageformvmf').load(urlstring+" form#app-stop-form", function(){
+			$('.lead').hide();
+			$('#actionvmf').html('<div class="start-stop-ction"><label>Action:</label> <div class="alcontent"><i class="fa fa-stop"></i> Stop </div><br/></div>');
+			$('#storageformvmf select').selectpicker();
+			$('#storageformvmf select').hide();
+			$('#volumepopupvmf').show();
+		}); 
+	}
+	
 	function validateServerName(){
+		$(".name-error").remove();
 		var serverName = $("div#step1 #name").val();
 		if (serverName == ""){
-			alert("Server name can not be empty");
+			$("div#storageformaddn div#step1 div#name_box div.right").append("<span class='name-error'>Server name can not be empty</span>");
 			return(false);
 		} else if (serverName.indexOf(' ') >= 0) {
-			alert("Server name can not have space");
+			$("div#storageformaddn div#step1 div#name_box div.right").append("<span class='name-error'>Server name can not have space</span>");
 			return(false);
 		}
 		else {
@@ -386,24 +394,138 @@ $(document).ready(function() {
 		$('#storageform').load(url+" form", function(){
 			$('#storageform select').selectpicker();
 			$('#storageform select').hide();
+			$('#storageform form.form-horizontal').remove(); // mar-top
 			$('#storageform .selectpicker')
 			$('#volumepopup').show();
 		});
 	}
 	
-	/*$('body').on('click', '.removeservina', function(e){
-		e.preventDefault();
-		var id = $(this).attr('idserv');
-		var url = 'index.php?base=appliance&resource_filter=&appliance_action=select&resource_filter=&resource_type_filter=&appliance%5Bsort%5D=appliance_id&appliance%5Border%5D=ASC&appliance%5Boffset%5D=0&appliance%5Blimit%5D=20&appliance_identifier%5B%5D='+id+'&appliance_action%5Bremove%5D=remove';
-
-
-		  		$('#storageform').load(url+" form", function(){
-	  			
-		  			$('#storageform select').selectpicker();
-		  			$('#storageform select').hide();
-		  			$('#storageform .selectpicker')
-		  			$('#volumepopup').show();
-		  		});  		
-	});*/
+	function formatAWSPopOver (d) {
+		var onclickHtml = '<ul class="appliance-pop-over-menu">';
+			onclickHtml = onclickHtml + '<li class="fa fa-cogs"> '+d[6]+'</li>';
+			onclickHtml = onclickHtml + '<li class="fa fa-cog"> '+d[7]+'</li>';
+			onclickHtml = onclickHtml + '<li class="fa fa-history"> '+d[8]+'</li>';
+			onclickHtml = onclickHtml + '</ul>';
+		return onclickHtml;
+	}
+	
+	if($('#load-aws-instance').length){
+		$.ajax({
+		  url: 'index.php?base=appliance&awsec2=list',
+		})
+		.done(function(data) {
+			$("#aws-resources-instance").html(data);
+			var aws_dt = $("#aws_instance_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".aws-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = aws_dt.row( tr );
+							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load instances from AWS");
+		});
+	}
+	
+	$('#load-aws-instance').click(function(e){
+		//aws-resources-instance $("#aws-resources-instance").html('<p id="load-aws-instance"><i class="fa fa-spinner fa-lg" aria-hidden="true"></i> loading</p>');
+		$.ajax({
+		  url: 'index.php?base=appliance&awsec2=list',
+		})
+		.done(function(data) {
+			$("#aws-resources-instance").html(data);
+			var aws_dt = $("#aws_instance_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".aws-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = aws_dt.row( tr );
+							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load instances from AWS");
+		});
+		return false;
+	});
+	
+	if($('#load-azure-instance').length){
+		$.ajax({
+		  url: 'index.php?base=appliance&azurevm=list',
+		})
+		.done(function(data) {
+			$("#azure-resources-vms").html(data);
+			var azure_dt = $("#azure_vm_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".azure-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = azure_dt.row( tr );
+							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load VMs from Azure");
+		});
+	}
+	
+	$('#load-azure-instance').click(function(e){
+		$.ajax({
+		  url: 'index.php?base=appliance&azurevm=list',
+		})
+		.done(function(data) {
+			$("#azure-resources-vms").html(data);
+			var azure_dt = $("#azure_vm_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".azure-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = azure_dt.row( tr );
+							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load VMs from Azure");
+		});
+		return false;
+	});
 	
 </script>

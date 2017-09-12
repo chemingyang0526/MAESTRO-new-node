@@ -542,6 +542,7 @@ div.cleanup-right {
 
 div.cloud-table-class {
 	width: 100%;
+	padding-right: 20px;
 }
 
 div.cloud-table-class table, 
@@ -606,4 +607,20 @@ div#add_product div.score-add-product div.htmlobject_box div.right .bootstrap-se
 
 div#content-container div.cloud #project_tab {
 	right: 0 !important;
+}
+
+.updatoo #project_tab1{
+	width: 100% !important;
+	margin-left: -25px !important;
+}
+
+#volumepopup, {
+	/*width: 600px;*/
+	width: auto !important;
+	min-width: 600px;
+	position: fixed;
+	top: 20%;
+	left: 25%;
+	display: none;
+	z-index: 999999999999 !important;
 }

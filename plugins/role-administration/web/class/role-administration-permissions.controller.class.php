@@ -207,6 +207,7 @@ var $lang = array(
 	function add( $hidden = true ) {
 		$data = '';
 		if( $hidden === true ) {
+			
 			require_once($this->rootdir.'/plugins/role-administration/class/role-administration-permissions.add.class.php');
 			$controller = new role_administration_permissions_add($this->htvcenter, $this->response);
 			$controller->actions_name  = $this->actions_name;
@@ -215,6 +216,7 @@ var $lang = array(
 			$controller->lang          = $this->lang['add'];
 			$data = $controller->action();
 		}
+		
 		$content['label']   = $this->lang['add']['tab'];
 		$content['value']   = $data;
 		$content['target']  = $this->response->html->thisfile;

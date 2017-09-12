@@ -27,7 +27,7 @@
 }
 
 .card-block.full {
-	height: 21.3rem;
+	min-height: 21.3rem;
 }
 
 .card-block {

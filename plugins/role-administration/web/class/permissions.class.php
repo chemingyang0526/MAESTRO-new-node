@@ -119,23 +119,24 @@ class permissions
 	 */
 	//--------------------------------------------
 	function get_base() {
-
-		$plugins = array('appliance', 'image', 'kernel', 'resource', 'storage', 'event', 'aa_plugins');
+		
+		//$plugins = array('appliance', 'image', 'kernel', 'resource', 'storage', 'event', 'aa_plugins');
+		//Its was trying to delacre resource twice, thats why removed resource from the array
+		$plugins = array('appliance', 'image', 'kernel', 'storage', 'event', 'aa_plugins');
 
 		$content = array();
 		// methodes that are no actions
 		$methods = array('api', 'action');
 		$i = 0;
 		$x = 0;
+		$count = 0;
 		foreach($plugins as $plugin) {
-		
 			if($plugin === 'aa_plugins') {
 				$path = $this->rootdir.'/plugins/'.$plugin.'/class';
 			} else {
 				$path = $this->rootdir.'/server/'.$plugin.'/class';
 			}
 			$files = $this->file->get_files($path);
-
 			$objs = array();
 			if(is_array($files)) {
 				foreach($files as $file) {
@@ -144,12 +145,12 @@ class permissions
 						$class = str_replace('.class.php', '', $file['name']);
 						$class = str_replace('.', '_', $class);
 						$class = str_replace('-', '_', $class);
+						//echo $class . "HTBase<br />";
 						$class = new $class($this->htvcenter, $this->response);
 						$objs[] = $class;
 					}
 				}
 			}
-
 			$tmp = array();
 			foreach($objs as $obj) {
 				$tmp['object'] = $obj;
@@ -165,7 +166,7 @@ class permissions
 								$tmp['actions'][] = $m;
 							} else {
 								$tmp['actions'][] = 'clone';
-						}
+							}
 							$x = $x + count($m);
 						}
 					}
@@ -175,11 +176,8 @@ class permissions
 				$content[$i] = $tmp;
 				$i++;
 			}
-
 		}
 		return $content;
 	}
-
-
 }
 ?>

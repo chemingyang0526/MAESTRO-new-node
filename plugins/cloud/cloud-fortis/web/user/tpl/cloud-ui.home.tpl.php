@@ -24,17 +24,17 @@ var lang_network = "{lang_network}";
 //]]>
 </script>
 <style>
-	#project_tab_ui { display: none; }  /* hack for tabmenu issue */
-	/* #chart-area { background-color: #fff; } */
+    #project_tab_ui { display: none; }  /* hack for tabmenu issue */
+    /* #chart-area { background-color: #fff; } */
    .c3-chart-arcs .c3-chart-arcs-title { font-size: 20px; }
    .c3-chart { height: 14rem; }
-   .chartjs-chart { height: 172px; }
+   .chartjs-chart { height: 175px; }
    .chartjs-chart .chart-legend li span{
-	    display: inline-block;
-	    width: 10px;
-	    height: 10px;
-	    margin-right: 3px;
-	}
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 3px;
+    }
    .c3-axis-y-label{ font-size: 0.9em; }
    .current-month { min-height: 250px; padding-top: 15px;}
    .current-month .form-label { width : 30%; min-width: auto; color: #515151; font-size: 16px; }
@@ -72,7 +72,8 @@ var lang_network = "{lang_network}";
 	-->
 	<div class="row">
 		<!-- left column -->
-		<div class="col-sm-12 col-lg-3">
+		<div class="col-sm-12 col-lg-4">
+			<!--
 			<div class="row">
 				<div class="col-sm-12 dashboard">
 					<section class="card">	
@@ -118,16 +119,17 @@ var lang_network = "{lang_network}";
 					</section>
 				</div>
 			</div>
+			-->
 			<div class="row">
-				<div class="col-sm-12 dashboard">
-					<section class="card">	
+				<div class="col-sm-12 col-md-6 col-lg-12 dashboard">
+					<section class="card">
 						<div class="card-header">
-					        <span class="cat__core__title">
-					            <strong>VM Summary</strong>
-					        </span>
-					    </div>
-					    <div class="card-block full">
-					    	<div class="panel-heading">
+							<span class="cat__core__title">
+								<strong>VM Summary</strong>
+							</span>
+						</div>
+						<div class="card-block full">
+							<div class="panel-heading">
 								<div class="panel-control">
 								</div>
 								<h3 class="panel-title">Services</h3>
@@ -137,11 +139,35 @@ var lang_network = "{lang_network}";
 						</div>
 					</section>
 				</div>
-			</div>		
+		<!--	</div>
+
+			<div class="row"> -->
+				<div class="col-sm-12 col-md-6 col-lg-12 dashboard">
+					<section class="card">
+						<div class="card-header">
+							<span class="cat__core__title">
+								<strong>Current Billing</strong>
+							</span>
+						</div>
+						<div class="card-block full">
+							<div class="panel-heading">
+								<div class="panel-control">
+								</div>
+								<h3 class="panel-title">{current_month}</h3>
+							</div>
+							<div id="chartdiv-inventory-monthlybilling-legend" class="donut-chart-legend"></div>
+							<div class="chartjs-chart">
+								<canvas id="chartdiv-inventory-monthlybilling" ></canvas>
+							</div>
+							<p style="text-align: center; position: absolute; bottom: 10px; right: 20px;"><b>Monthly Total: </b><span id="monthlybilling-total"> --- </span></p>
+						</div>
+					</section>
+				</div>
+			</div>
 		</div>
 		<!-- end left column -->	
 		<!-- right column -->
-		<div class="col-sm-12 col-lg-9">
+		<div class="col-sm-12 col-lg-8">
 			<div class="row">
 				<div class="col-sm-12">
 					<section class="card">	
@@ -195,53 +221,10 @@ var lang_network = "{lang_network}";
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-lg-4 dashboard">
-					<section class="card">	
-						<div class="card-header">
-					        <span class="cat__core__title">
-					            <strong>Current Billing</strong>
-					        </span>
-					    </div>
-					    <div class="card-block full">
-					    	<div class="panel-heading">
-								<div class="panel-control">
-								</div>
-								<h3 class="panel-title">{current_month}</h3>
-							</div>
-							<div id="chartdiv-inventory-monthlybilling-legend" class="donut-chart-legend"></div>
-							<div class="chartjs-chart">	
-								<canvas id="chartdiv-inventory-monthlybilling" ></canvas>
-							</div>
-							<p style="text-align: center"><b>Monthly Total: </b><span id="monthlybilling-total"> --- </span></p>	
-							
-							<!--
-							<div class="current-month">
-								<div class="form-group row">
-                                	<label class="form-label" for="cpu">CPU</label>
-                               		<input class="form-control" id="cpu" type="text" disabled>
-                            	</div>
-								<div class="form-group row">
-                                	<label class="form-label" for="storage">Storage</label>
-                               		<input class="form-control" id="storage" type="text" disabled>
-                            	</div>
-                            	<div class="form-group row">
-                                	<label class="form-label" for="memory">Memory</label>
-                               		<input class="form-control" id="memory" type="text" disabled>
-                            	</div>
-								<div class="form-group row">
-                                	<label class="form-label" for="virtualization">Virtualization</label>
-                               		<input class="form-control" id="virtualization" type="text" disabled>
-                            	</div>
-                            	<div class="form-group row">
-                                	<label class="form-label" for="networking">Networking</label>
-                               		<input class="form-control" id="networking" type="text" disabled>
-                            	</div>
-							</div>
-							-->
-						</div>
-					</section>
-				</div>
-				<div class="col-sm-12 col-lg-8 dashboard">
+				<!-- <div class="col-sm-12 col-lg-4 dashboard">
+					
+				</div> -->
+				<div class="col-sm-12 dashboard">
 					<section class="card">	
 						<div class="card-header">
 					        <span class="cat__core__title">

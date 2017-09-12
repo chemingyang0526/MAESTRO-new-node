@@ -107,7 +107,7 @@ var $use_api = true;
 			if(isset($response->saved_profile)) {
 				$param = '&profile='.$response->saved_profile;
 				$this->response->redirect(
-					$this->response->get_url($this->actions_name, 'create', $this->message_param, $response->msg).$param
+					$this->response->get_url($this->actions_name, 'appliances', $this->message_param, $response->msg).$param
 				);
 			} else {
 				$this->response->redirect(
@@ -261,7 +261,7 @@ var $use_api = true;
 				$form->set_error('You have not got free disk space for instance creation');
 				$response->msg = sprintf('You have not got free disk space for instance creation! Available space is '.$space);
 				$this->response->redirect(
-					$this->response->get_url($this->actions_name, 'create', $this->message_param, $response->msg).$param
+					$this->response->get_url($this->actions_name, 'appliances', $this->message_param, $response->msg).$param
 				);
 				return $response;
 			}

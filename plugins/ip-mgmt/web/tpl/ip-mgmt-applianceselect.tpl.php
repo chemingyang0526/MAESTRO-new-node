@@ -17,3 +17,85 @@
 
 <h2>{appliances}</h2>
 {table}
+
+<div id="volumepopup" class="modal-dialog">
+	<div class="panel">
+		<!-- Classic Form Wizard -->
+		<!--===================================================-->
+		<div id="demo-cls-wz">
+			<!--Nav-->
+			<ul class="wz-nav-off wz-icon-inline wz-classic">
+				<li class="col-xs-3 bg-info active">
+					<a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true"><span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-server"></i></span> Server Alert</a>
+				</li>
+				<div class="volumepopupclass"><a id="volumepopupclose"><i class="fa fa-icon fa-close"></i></a></div>
+			</ul>
+			
+			<!--Progress bar-->
+			<div class="progress progress-sm progress-striped active">
+				<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+			</div>
+			
+			<!--Form-->
+			<div class="form-horizontal mar-top">
+				<div class="panel-body">
+					<div class="tab-content">
+						<!--First tab-->
+						<div class="tab-pane active in" id="demo-cls-tab1">
+							<div id="storageform"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===================================================-->
+		<!-- End Classic Form Wizard -->
+	</div>
+</div>
+
+
+
+<div id="volumepopupvmf" class="modal-dialog">
+	<div class="panel">
+		<!-- Classic Form Wizard -->
+		<!--===================================================-->
+		<div id="demo-cls-wz">
+			<!--Nav-->
+			<ul class="wz-nav-off wz-icon-inline wz-classic">
+				<li class="col-xs-3 bg-info active"><a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true"><span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-server"></i></span> Server Action</a></li>
+				<div class="volumepopupclass"><a id="volumepopupclosevmf"><i class="fa fa-icon fa-close"></i></a></div>
+			</ul>
+			<!--Progress bar-->
+			<div class="progress progress-sm progress-striped active">
+				<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+			</div>
+			<!--Form-->
+			<div class="form-horizontal mar-top">
+				<div class="panel-body">
+					<div class="tab-content">
+						<!--First tab-->
+						<div class="tab-pane active in" id="demo-cls-tab1">
+							<div id="actionvmf"></div>
+							<div id="storageformvmf"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===================================================-->
+		<!-- End Classic Form Wizard -->
+	</div>
+</div>
+<script>
+	function configPopUp(url){
+		var id = id;
+		var urlstring = url; // 'index.php?base=appliance&resource_filter=&appliance_action=start&appliance_identifier[]='+id;
+		$('#storageformvmf').load(urlstring+" form#ip-mgmt-config", function(){
+			$('.lead').hide();
+			$('#actionvmf').html('<p>&nbsp;</p>');
+			$('#storageformvmf select').selectpicker();
+			$('#storageformvmf select').hide();
+			$('#volumepopupvmf').show();
+		}); 
+	}
+</script>

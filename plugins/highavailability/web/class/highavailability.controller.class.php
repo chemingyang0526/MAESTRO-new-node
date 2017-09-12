@@ -246,13 +246,16 @@ var $lang = array(
 			}
 		}
 
-		if ($id) {
+		/*if ($id) {
 			return 'true!';
 		} else {
 			$this->response->redirect(
 				$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
 			);
-		}
+		}*/
+		$this->response->redirect(
+			$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
+		);
 	}
 
 	//--------------------------------------------
@@ -264,6 +267,7 @@ var $lang = array(
 	 */
 	//--------------------------------------------
 	function disable($id=false) {
+		
 		$msg = array();
 		if($id) {
 			$appliances[] = $id;
@@ -277,13 +281,16 @@ var $lang = array(
 				$msg[] = sprintf($this->lang['msg_disabled'], $id);
 			}
 		}
-		if ($id) {
+		/*if ($id) {
 			return 'false!';
 		} else {
 			$this->response->redirect(
 				$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
 			);
-		}
+		}*/
+		$this->response->redirect(
+			$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
+		);
 	}
 
 

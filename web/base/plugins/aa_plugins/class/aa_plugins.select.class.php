@@ -233,7 +233,7 @@ if ($htvcenter_version != $plugin_base_version) {
 								$plugin_description = 'Integrates the OCH Virtualization Technology.';
 								break;
 							case 'cloud':
-								$plugin_name_title = 'fortis';
+								$plugin_name_title = 'score';
 								break;
 							case 'tmpfs-storage':
 								$plugin_name_title = 'HTFS In-Memory';
@@ -283,7 +283,7 @@ if ($htvcenter_version != $plugin_base_version) {
 								$plugin_name_title = 'svaccess';
 								break;
 							case 'cloud':
-								$plugin_name_title = 'fortis';
+								$plugin_name_title = 'Score';
 								break;
 							case 'kvm':
 								$plugin_name_title = 'OCH';

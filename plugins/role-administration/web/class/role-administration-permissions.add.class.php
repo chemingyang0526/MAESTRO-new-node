@@ -195,9 +195,9 @@ var $lang;
 		$d['name']['object']['attrib']['name'] = 'permission_group_name';
 		$d['name']['object']['attrib']['maxlength'] = 50;
 
-		$data['base']   = $this->permissions->get_base();
 		$data['plugin'] = $this->permissions->get_plugins();
-
+		$data['base']   = $this->permissions->get_base();
+		
 		foreach($data as $key => $content) {
 			if(is_array($content) && count($content) > 0) {
 				$i = 0;

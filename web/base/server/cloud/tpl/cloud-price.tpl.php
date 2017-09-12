@@ -33,8 +33,11 @@
 		<div class="multi-cloud-price" id="cloud-price-result">
 
 		</div>
+		<div id="cloud-price-legend">
+			
+		</div>
 		<div class="cloud-price-description">
-			<p align="center">This graph compares the prices between Aamazon Web Service and Azure by Microsoft. To generate the graph, only the prices for different cores/cpu numbers has been considered. Other attributes like RAM, Storage, Location etc. has not considered. X-axis represents the number of cpus and Y-axis represents the prcie for one month.</p>
+			<p align="center">This graph compares the prices between Aamazon Web Service and Azure by Microsoft. To generate the graph, only the prices for different cores/cpu numbers has been considered. Other attributes like RAM, Storage, Location etc. has not considered. X-axis represents the number of cpus and Y-axis represents the prcie for one month. All the prices shown here are in USD.</p>
 		</div>
 	</div>
 </div>
@@ -79,7 +82,8 @@
 		})
 		.done(function(data) {
 			$('#cloud-price-result').html('');
-			$('.cloud-price-description').html('');
+			$('.cloud-price-description').remove();
+			$('#cloud-price-legend').remove();
 			$('#cloud-price-result').append(data);
 		})
 		.fail(function() {
@@ -101,7 +105,7 @@
 				{ y: '16', aws: temp[8],  az: temp[18] },
 				{ y: '32', aws: temp[10],  az: temp[20] }
 			];
-			Morris.Line({
+			var priceChart = Morris.Line({
 				element: 'cloud-price-result',
 				data: graphData,
 				xkey: 'y',
@@ -111,6 +115,10 @@
 				lineWidth: 1,
 				parseTime:false,
 				resize: true
+			});
+			priceChart.options.labels.forEach(function(label, i){
+				var legendItem = $('<span></span>').text(label).css('color', priceChart.options.lineColors[i])
+				$('#cloud-price-legend').append(legendItem)
 			});
 		})
 		.fail(function() {

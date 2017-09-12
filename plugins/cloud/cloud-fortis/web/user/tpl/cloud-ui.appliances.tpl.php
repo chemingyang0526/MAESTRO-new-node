@@ -134,6 +134,14 @@
 		display: none;
 	}
 
+	.popover li.list-group-item {
+		cursor: pointer;
+	}
+
+	.popover li.list-group-item:hover {
+		color: #0190fe;
+	}
+
 	/*
 	select, textarea, input {
 		background-color: #fff;
@@ -149,8 +157,190 @@
 <script src="/cloud-fortis/js/c3/c3.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 /* run DataTable.js */
+var hostname = '';
+var cdromlist = [];
 
 $(document).ready(function() {
+
+	function loadAppliancesTable() {
+		var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&table=appliances_table";
+
+		$.ajax({
+			url : url,
+			type: "GET",
+			cache: false,
+			async: true,
+			dataType: "html",
+			success : function (data) {
+				$('.popover').popover('hide');
+				$("#table-appliances").empty().append(data);
+
+					var dt = $("#cloud_appliances").DataTable( {
+						"columns": [
+							{ "visible": false },
+							null,
+							null,
+							null,
+							null,
+							null,
+							null,
+							null,
+							null,
+							{ "orderable": false }
+						],
+						"order": [], //  [[0, 'asc']],
+						"bLengthChange": false,
+						"pageLength": 10,
+						"search": {
+							"regex": true
+						},
+						"bAutoWidth": true,
+						"fnDrawCallback": function( oSettings ) {
+							$(".toggle-graph a").popover({
+								html: true,
+								placement: "bottom", 
+							});
+
+							$(".toggle-graph a").on("shown.bs.popover", function() {
+
+								hostname = $(this).data('hostname');
+
+								$('.cdrom').click(function(){
+									var action = 'getlist';
+									cdromsender(hostname, action);
+									
+									$('#isofilez').html('');
+									for( i in cdromlist ) {
+										var file = cdromlist[i];
+										var filerow = '<tr class="htmlobject_tr odd last"><td class="htmlobject_td name"><a href="#" class="file">'+file+'</a></td></tr>';
+										$('#isofilez').append(filerow);
+									}
+									
+									$('#filepicker').show();
+								});
+
+								$('.cdromeject').click(function() {
+									var action = 'eject';
+									cdromsender(hostname, action);
+								});
+
+								$('.filepickclose').click(function(){
+									hostname = '';
+								});
+
+								$('body').on('click', '.file', function() {
+									var filetext = $(this).text();
+									cdromsender(hostname, 'insert', filetext);
+								});
+
+								$("li.list-group-item").on("click", function () { 
+
+									var title = $(this).find("span").text();
+									var rel = $(this).attr("rel");
+									var isVolumesmpopup = $(this).hasClass('editvolumesmpopup');
+
+									if (rel && !isVolumesmpopup) {
+										$("#confirm-appliance-actions").modal('show');
+
+										$.ajax({
+											url : rel,
+											type: "GET",
+											cache: false,
+											async: true,
+											dataType: "html",
+											success : function (data) {
+												$("#confirm-appliance-actions h3").text(title);
+												$("#confirm-appliance-actions .modal-body").empty().append(data);
+											}
+										});
+										return false; // to prevent two click events
+									} else {
+										if (isVolumesmpopup) {
+											$("#modal-volume .modal-body table tbody").empty();
+											$("#modal-volume h3").text("Loading...");
+											$("#msgBox h1").text("Please wait while we load storage disks information...");
+											$("#modal-volume").modal('show');
+
+											var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedata&hostname=" + hostname;
+											
+											$.ajax({
+												url : url,
+												type: "GET",
+												cache: false,
+												async: true,
+												dataType: "html",
+												success : function (data) {
+													$("#msgBox h1").text("");
+													$("#modal-volume h3").text("Edit Volumes");
+													$("#modal-volume .modal-body table tbody").empty().append(data);
+													var num = '';
+
+													$('.voldel').on('click', function () {
+														$("#modal-volume h3").text("Process Deleting Volume...");
+														num = $(this).closest('tr').attr('num');
+														var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedatadel&hostname=" + hostname +"&num="+num;
+
+														$.ajax({
+															url : url,
+															type: "GET",
+															cache: false,
+															async: true,
+															dataType: "html",
+															success : function (data) {
+																$("#modal-volume .modal-body table tbody").empty().append(data);
+																alert('Volume removed successfully.');
+																$('#modal-volume').modal('hide');
+															}
+														});
+													});
+
+													$('.voladd').on('click', function() {
+														$("#modal-volume h3").text("Process Adding Volume...");
+														num = $(this).closest('tr').attr('num');
+														$('#modal-volumeadd').modal();
+													});
+
+													$('#addvolumebtnvv').click(function(){
+														$("#modal-volume h3").text("Processing... Please wait...");
+														var sizevol = $('#volumeselect').val();
+														var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedataadd&hostname="+hostname+"&num="+num+"&sizevol="+sizevol;
+														
+														$.ajax({
+															url : url,
+															type: "GET",
+															cache: false,
+															async: false,
+															dataType: "html",
+															success : function (data) {
+																if (data == 'no disk space') {
+																	alert('You have not got free space for this volume creation');
+																	$('#modal-volumeadd').modal('hide');
+																	$('#modal-volume').modal('hide');
+																	return false;
+																}
+																$("#modal-volume .modal-body table tbody").empty();
+																alert('Volume created successfully.');
+																$('#modal-volumeadd').modal('hide');
+																$('#modal-volume').modal('hide');
+																return false;
+															}
+														}); 
+													});
+												}
+											});
+											return false;
+										} else {
+											return true;
+										}
+									}
+								});
+							});
+						}
+					} );
+				//});
+			}
+		}); 
+	}
 
 	$('#create-vm-modal').on('shown.bs.modal', function (e) {
 
@@ -320,7 +510,58 @@ $(document).ready(function() {
 		});
 	}); 
 
+	function cdromsender(hostname, action, isofile) {
 
+			var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=cdrom&hostname=" + hostname;
+			url = url + "&cdaction=" + action;
+			url = url + "&isofile=" + isofile;
+			var row = '';
+			$('.hostnamee').each(function(){
+				if ( $(this).text() == hostname ) {
+					row = $(this).closest('tr');
+				}
+			});
+			
+			$.ajax({
+				url : url,
+				type: "GET",
+				cache: false,
+				async: false,
+				dataType: "html",
+				success : function (data) {
+					if (action == 'getlist') {
+						list = data.split(';');
+						for (i in list) {
+							cdromlist[i] = list[i];
+						}
+					}
+
+					if (action == 'insert') {
+						if (data.trim() == 'Insert succesful') {
+							alert(data);
+							$('#filepicker').hide();
+							row.find('.cdrom').hide();
+							row.find('.cdromeject').show();
+						} else {
+							alert('Can\'t insert iso file, please, read documentation first');
+							$('#filepicker').hide();
+						}
+						
+					}
+
+					if (action == 'eject') {
+						if (data.trim() == 'Eject succesful') {
+							alert(data);
+							row.find('.cdromeject').hide();
+							row.find('.cdrom').show();
+						} else {
+							alert('Can\'t eject cd');
+						}
+					}
+				}
+			});
+	}
+	// --- end cdrom ---
 
 	function makeSummary() {
 		var apps = [];
@@ -367,6 +608,9 @@ $(document).ready(function() {
 			});
 		});
 	}
+
+	// --- end cdrom ---
+
 /*
 	function initiateOwlCarousel() {
 		if ($(".owl-carousel.uninitiated").length > 0) {
@@ -435,41 +679,25 @@ $(document).ready(function() {
 
 	}
 */
-	var dt = $("#cloud_appliances").DataTable( {
+	// reload the table every 5 seconds
+	function reloadAppliancesTable() {
+	    var t;
+	    window.onload = resetTimer;
+	    window.onmousemove = resetTimer;
+	    window.onmousedown = resetTimer; // catches touchscreen presses
+	    window.onclick = resetTimer;     // catches touchpad clicks
+	    window.onscroll = resetTimer;    // catches scrolling with arrow keys
+	    window.onkeypress = resetTimer;
 
-		"columns": [
-			{ "visible": false },
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			{ "orderable": false }
-		],
-		"order": [], //  [[0, 'asc']],
-		"bLengthChange": false,
-		"pageLength": 10,
-		"search": {
-			"regex": true
-		},
-		"bAutoWidth": true,
-		"fnDrawCallback": function( oSettings ) {
-			$(".toggle-graph a").popover({
-				html: true,
-				placement: "bottom",
-				content: function() {
-					return $('#popover-content').html();
-				}
-			});
-		}
-	} );
-
-
-	
-
+	    function resetTimer() {
+	        clearInterval(t);
+	        t = setInterval( function () {
+				loadAppliancesTable();
+			}, 5000 ); // time is in milliseconds
+	    }
+	}
+	loadAppliancesTable();
+	reloadAppliancesTable();
 
 	/* This and function format is for adding an expanded row by clicking on the ... button  
 
@@ -549,9 +777,6 @@ $(document).ready(function() {
 	});
 	*/
 });
-
-
-
 
 function get_state( id ) {
 /*
@@ -659,7 +884,6 @@ function get_state( id ) {
 <div id="cloudbackgroundPopup"></div>
 //-->
 
-
 <div class="cat__content">
 	<cat-page>
 	<div class="row">
@@ -676,12 +900,12 @@ function get_state( id ) {
 						</div>
 					</div>
 				</div>
-				<div class="card-block">
-					{table}
+				<div id="table-appliances" class="card-block">
 				</div>
 			</section>
 		</div>
 	</div>
+	<p id="msgBox"><h1 class="text-danger"></h1></p>
 	</cat-page>
 </div>
 
@@ -698,15 +922,76 @@ function get_state( id ) {
 	</div>
 </div>
 
-<ul id="popover-content" class="list-group" style="display: none">
-	<a href="#" class="list-group-item">Start</a>
-	<a href="#" class="list-group-item">Stop</a>
-	<a href="#" class="list-group-item">Pause</a>
-	<a href="#" class="list-group-item">Delete</a>
-</ul>
+<div id="confirm-appliance-actions" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black"></h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+		</div>
+	</div>
+</div>
 
+<div id="modal-volume" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black">Loading...</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<table class="table table-striped table-hover" id="moredisktbl"><tbody>
+				<!--
+				<tr class="warning">
+					<td>Type</td><td>Name</td><td>Size</td><td class="text-center">Action</td>
+				</tr>
+				-->
+			</tbody></table>
+		</div>
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+		</div>
+	</div><!-- /.modal-content -->
+</div>
 
-<!--
+<div id="modal-volumeadd" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black">Add one more volume</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p style="display:none"> You can add few volumes here. Available space for it is <span id="freembsp">{freemb}</span> </p>
+			<div class="moredisk">
+				<span>Input volume information:</span><br/>
+				<input  type="text" id="namevolumeinput"/><br/>
+				<div class="selecto">
+					<select id="typevolumeselect">
+						<option value="raw">raw</option>
+					</select>
+				</div>
+				<div class="selecto">
+					<label>Size:</label> 	{volumeselect}
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+			<button class="btn btn-primary" type="button" id="addvolumebtnvv">Add</button>
+		</div>
+	</div>
+</div>
+
 <div class="function-box" style="display: none" id="filepicker">
 	<div onmouseup="document.getElementById('filepicker').onmousedown = null;" onmousedown="Drag.init(document.getElementById('filepicker'));" onclick="MousePosition.init();" id="caption" class="functionbox-capation-box">
 		<div class="functionbox-capation">
@@ -721,65 +1006,6 @@ function get_state( id ) {
 </tbody></table>
 </div>
 </div>
--->
-
-
-<div id="modal-volume" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">Disk Management</h4>
-      </div>
-      <div class="modal-body">
-				 	<table class="table table-striped table-hover" id="moredisktbl">
-				 	<tr class="warning">
-				 		<td style="display:none">Type</td><td style="display:none">Name</td><td>Size</td><td class="text-center">Action</td>
-				 	
-				 	</tr>
-				 	
-				 	</table>
-      </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
-
-
-
-<div id="modal-volumeadd" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">Add one more volume</h4>
-      </div>
-      <div class="modal-body">
-      		<p style="display:none"> You can add few volumes here. Available space for it is <span id="freembsp">{freemb}</span> </p>
-				 	<div class="moredisk">
-				 		<span>Input volume information:</span><br/><br/>
-				 		<input  type="text" id="namevolumeinput"/><br/>
-				 		<div class="selecto">
-				 		<select id="typevolumeselect">
-				 			<!--<option value="qcow2">qcow2</option> -->
-				 			<option value="raw">raw</option>
-				 		</select></div><br/>
-				 		<div class="selecto">
-				 		<label>Size:</label> 	{volumeselect}
-				 		</div>
-				 		<br/><br/><br/>
-				 	</div>
-      </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-        <button data-dismiss="modal" class="btn btn-success" type="button" id="addvolumebtnvv">Add</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
-
 
 <div id="volumepopup" class="modal-dialog">
 <div class="panel">

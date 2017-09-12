@@ -15,7 +15,7 @@
 */
 //-->
 
-<h2 class="inner">{label} <span class="pull-right">{add}</span></h2>
+<h2 class="inner">{label} <span class="pull-right" id="add-new-resource">{add}</span></h2>
 
 <div id="serverpanel" class="row">
                         <div class="col-sm-12 col-md-4 col-lg-4 col-sm-4">

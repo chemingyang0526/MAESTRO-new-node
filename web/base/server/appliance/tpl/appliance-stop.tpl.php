@@ -15,7 +15,7 @@
 */
 //-->
 <h2>{label}</h2>
-<form action="{thisfile}" method="POST">
+<form id="app-stop-form" action="{thisfile}" method="POST">
 	<div id="form">
 		{form}
 		<div id="buttons">{submit}&#160;{cancel}</div>

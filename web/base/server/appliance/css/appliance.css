@@ -407,7 +407,9 @@ div.card-header-top{
 
 }
 
-div#cloud_appliances_table_wrapper div#cloud_appliances_table_filter input[type="search"]{
+div#cloud_appliances_table_wrapper div#cloud_appliances_table_filter input[type="search"],
+div#aws_instance_table_wrapper div#aws_instance_table_filter input[type="search"],
+div#azure_vm_table_wrapper div#azure_vm_table_filter input[type="search"]{
 	border: 1px solid #e1e5ea;
 	padding: 3px;
 }
@@ -439,4 +441,116 @@ ul.appliance-pop-over-menu li {
 
 .en-app:before{
 	padding: 3px;
+}
+
+div#aws-resources, div#azure-resources{
+	margin-left: 20px;
+}
+
+div#aws-resources-instance, div#azure-resources-vms {
+
+}
+
+p#load-aws-instance, p#load-azure-instance {
+	cursor: pointer;
+	text-align: left;
+	padding: 20px 10px;
+	margin: 0;
+}
+
+p.vm-header{
+	padding: 15px 0 10px 0;
+	font-size: 16px;
+	color: #7c7c7c;
+	margin: 0;
+}
+
+td.vmactive{
+	color: #8cc63f;
+}
+
+td.vmstopped{
+	color: #3399ff;
+}
+
+td.idle, td.transition, td.no-res {
+	color: rgb(232,168,23);
+}
+td.toggle-graph,
+td.toggle-graph a{
+	cursor: pointer;
+}
+
+td.aws-toggle-graph a,
+td.azure-toggle-graph a {
+	cursor: pointer;
+}
+
+span.name-error{
+	color: red;
+}
+
+#container .badge {
+	background-color: #3399ff;
+}
+
+div.start-stop-ction {
+	border-bottom: 1px solid #e7ebee;
+	width: 100%;
+}
+
+div#storageformvmf{
+	top: 0px;
+	margin: 20px 0 0 0;
+}
+
+div#storageformvmf form#app-start-form,
+div#storageformvmf form#app-stop-form {
+	margin: 0;
+}
+
+div#storageformvmf form#app-start-form div#form, 
+div#storageformvmf form#app-stop-form div#form {
+	margin: 0;
+}
+
+div#storageformvmf form#app-start-form div.htmlobject_box, 
+div#storageformvmf form#app-stop-form div.htmlobject_box {
+	margin: 0;
+}
+
+div#storageformvmf form#app-start-form div.htmlobject_box div.left, 
+div#storageformvmf form#app-stop-form div.htmlobject_box div.left {
+	margin: 0;
+	min-width: 114px;
+}
+
+div#storageformvmf form#app-start-form div#form div#buttons .submit, 
+div#storageformvmf form#app-stop-form div#form div#buttons .submit {
+	top: 0;
+}
+
+#servadddd a.add{
+	right: 15% !important;
+}
+
+td.active span, td.vmactive span {
+	background-color: #8cc63f;
+	border-radius: 8px;
+	color: #fff;
+	padding: 1px 5px;
+}
+
+td.inactive span, td.no-res span {
+	background-color: #ff5800;
+	border-radius: 8px;
+	color: #fff;
+	padding: 1px 5px;
+}
+
+td.vmstopped span {
+	background-color: #3399ff;
+	border-radius: 8px;
+	color: #fff;
+	padding: 1px 5px;
 }
