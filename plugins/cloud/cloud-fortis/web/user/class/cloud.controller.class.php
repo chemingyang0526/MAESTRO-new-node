@@ -722,13 +722,6 @@ class cloud_controller
 			$tpl = $this->portaldir."/user/tpl/index.login.tpl.php";
 		}
 
-		// die($tpl);
-
-
-		// if($this->file->exists($this->portaldir."/user/tpl/index.tpl.php")) {
-		// 	$tpl = $this->portaldir."/user/tpl/index.tpl.php";
-		// }
-
 		$this->tpl = $tpl;
 	}
 

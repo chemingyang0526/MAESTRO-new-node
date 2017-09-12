@@ -618,97 +618,11 @@ $('body').on('click', '.budgservn', function(){
 
 
 
-$('.alertprice').click(function(){
-	var percent = $('#percentbudg').val();
-	percent = parseInt(percent);
-	if ( (percent != 'NaN') && (percent <= 100) ) {
-	var row = '<tr><td class="perval">'+percent+'</td><td> <a class="rempercent"><i class="fa fa-close"></i> Remove</a></td></tr>';
-	$('.table-alerts').append(row);
-} else {
-	alert('Only integer number of percent value and not bigger, than 100, please');
-}
-$('.table-alerts').show();
 
-});
 
 $('body').on('click','.rempercent', function(){
 	$(this).closest('tr').remove();
 });
-
-$('.submitallprice').click(function(){
-	$('.lead').show();
-	var name = $('#budgetname').val();
-	var date_start = $('#budgetdatestart').val();
-	var date_end = $('#budgetdateend').val();
-	var cpu = $('#budgetcpu').val();
-	var memory = $('#budgetmemory').val();
-	var storage = $('#budgetstorage').val();
-	var networking = $('#budgetnetwork').val();
-	var vm = $('#budgetvm').val();
-
-	var perval = Array();
-	$('.perval').each(function(i){
-		perval[i] = $(this).text();
-	});
-
-
-	
-
-	cpu = parseInt(cpu);
-	if (cpu == 'NaN') {
-		cpu = 0;
-	}
-
-	memory = parseInt(memory);
-	if (memory == 'NaN') {
-		memory = 0;
-	}
-
-	storage = parseInt(storage);
-	if (storage == 'NaN') {
-		storage = 0;
-	}
-
-	networking = parseInt(networking);
-	if (networking == 'NaN') {
-		networking = 0;
-	}
-
-	vm = parseInt(vm);
-	if (vm == 'NaN') {
-		vm = 0;
-	}
-
-	var url = '/cloud-fortis/user/index.php?budget=yes';
-	var dataval = 'create=1&name='+name+'&limit='+perval+'&date_start="'+date_start+'"&date_end="'+date_end+'"&cpu='+cpu+'&memory='+memory+'&storage='+storage+'&networking='+networking+'&vm='+vm;
-	
-			$.ajax({
-				url : url,
-				type: "POST",
-				data: dataval,
-				cache: false,
-				async: false,
-				dataType: "html",
-				success : function (data) {
-					$('.lead').hide();
-					if (data != 'none') {
-						$('.lead').hide();
-						if (data == 'works') {
-							location.href='index.php?report=report_budget';
-						} else {
-							alert(data);
-						}
-					} else {
-						alert('Something wrong');
-					}
-				}
-			});
-
-
-
-});
-
-
 
 $('#content_container').click(function(){
 	$('.reportdropdown').hide();
