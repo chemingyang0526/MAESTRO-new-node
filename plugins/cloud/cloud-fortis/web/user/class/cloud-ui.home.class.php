@@ -148,9 +148,7 @@ var $cloud_id;
 				$t->add($ip_mgmt_name, 'ip_mgmt_name');
 				$t->add($ip_mgmt_list_per_user_arr[0]['address'], 'ip_mgmt_range_start');
 				$t->add(end($ip_mgmt_list_per_user_arr)['address'], 'ip_mgmt_range_end');
-				$t->add(date('F Y'), 'current_month');
 			}
-
 		}
 
 		/* end user cloudconfig ip-mgmt to get the first ip range  */
@@ -188,6 +186,8 @@ var $cloud_id;
 		$t->add($this->lang['home']['limit_memory'], 'lang_memory');
 		$t->add($this->lang['home']['limit_cpu'], 'lang_cpu');
 		$t->add($this->lang['home']['limit_network'], 'lang_network');
+
+		$t->add(date('F Y'), 'current_month');
 
 		return $t;
 	}
