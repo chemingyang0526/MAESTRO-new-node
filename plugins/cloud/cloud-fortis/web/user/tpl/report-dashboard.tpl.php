@@ -283,7 +283,6 @@ function renderdash() {
 
 
 function current_year_monthly_spent(bindto, data) {
-
     /* data = [
         ['x', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01', '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01'],
         ['total',             2300, 2100, 2250, 2140, 2260, 2150, 2000, 2400],
@@ -324,9 +323,8 @@ function current_year_monthly_spent(bindto, data) {
 }
 
 function current_year_three_months_spent(bindto, data) {
-
-    var x_column = ['x', '2017-07-01', '2017-08-01', '2017-09-01'];
-    var y_column = ['total', 750, 1200, 1080];
+    // var x_column = ['x', '2017-07-01', '2017-08-01', '2017-09-01'];
+    // var y_column = ['total', 750, 1200, 1080];
     // data = [x_column, y_column];
 
     var chart3 = c3.generate({
@@ -377,16 +375,19 @@ function current_year_three_months_spent(bindto, data) {
 }
 
 function current_month_spent_by_resource(bindto, data) {
-
-    var numbers = [240,230,320,250,160];
+    // var numbers = [240,230,320,250,160];
     var labels = ["cpu","storage","memory","virtualization","networking"];
     //data = [labels,numbers];
+	var numbers = data[1]
+	var max = Math.max.apply(null, numbers);
+	var min = max / 7;
+	var normalized_numbers = [Math.max(numbers[0],min), Math.max(numbers[1],min), Math.max(numbers[2],min), Math.max(numbers[3],min), Math.max(numbers[4],min)];
 
     var color = Chart.helpers.color;
     var config = {
         data: {
             datasets: [{
-                data: data[1],
+                data: normalized_numbers,
                 backgroundColor: [
                     color(seriesColors[0]).rgbString(),
                     color(seriesColors[1]).rgbString(),
@@ -432,9 +433,10 @@ function current_month_spent_by_resource(bindto, data) {
                 
             },
             tooltips: {
+                enabled : true,
                 callbacks: {
                     label: function(tooltipItems, data) {
-                        return data.labels[tooltipItems.index] +': $' + tooltipItems.yLabel;
+                        return data.labels[tooltipItems.index] +': $' + numbers[tooltipItems.index];
                     }
                 }
             }
@@ -549,14 +551,10 @@ $(document).ready(function () {
         var yearly_sum = 0.0;
 
         for (var k = 1; k < total_monthly.length; k++) {
-
             // console.log(total_monthly[k]);
             // console.log(yearly_sum);
-
             yearly_sum = yearly_sum + parseFloat(total_monthly[k]);
         }
-
-
 
         $("#yearly-spending h2").text("$" + yearly_sum.toFixed(2));
     });

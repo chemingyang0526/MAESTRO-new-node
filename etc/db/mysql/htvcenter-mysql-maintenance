@@ -64,7 +64,7 @@ if $MYSQL_CLIENT -u $htvcenter_DATABASE_USER $DB_PASS --host $htvcenter_DATABASE
     gzip $DB_MAINTENANCE_DIR/htvcenter_db_cloud_transaction_$BACKUP_TIME.sql
     # clean up cloud_transaction
     echo "NOTICE: Cleaning cloud_transaction table"  | logger
-    $MYSQL_CLIENT -u $htvcenter_DATABASE_USER $DB_PASS --host $htvcenter_DATABASE_SERVER $htvcenter_DATABASE_NAME -e "delete from cloud_transaction"
+    #$MYSQL_CLIENT -u $htvcenter_DATABASE_USER $DB_PASS --host $htvcenter_DATABASE_SERVER $htvcenter_DATABASE_NAME -e "delete from cloud_transaction"
 fi
 
 # backup cloud_zones_transaction

@@ -7,6 +7,10 @@
     background: #ffffff;
 }
 
+.card-header .small {
+	font-size: 65%;
+}
+
 .card {
     margin-bottom: 1.35rem;
 }

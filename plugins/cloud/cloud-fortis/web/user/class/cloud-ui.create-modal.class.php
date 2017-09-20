@@ -98,74 +98,139 @@ var $use_api = true;
 	function action() {
 		$response = $this->form();
 		$form     = $response->form;
-		
 		$elements = $form->get_elements();
-		// echo '<pre>'. var_export($form->get_elements(), true) . '</pre>'
+		$t = $this->response->html->template($this->tpldir."/cloud-ui.create-modal.tpl.php");
+		
+		$volumn_select_html = '';
+		$cloud_virtualization_select_html = '';
+		$cloud_kernel_select_html = '';
+		$cloud_image_select_html = '';
+		$cloud_memory_select_html = '';
+		$cloud_cpu_select_html = '';
+		$cloud_disk_select_html = '';
+		$cloud_network_select_html = '';
+		$cloud_ip_select_0_html = '';
+		$cloud_application_select_0_label = '';
+		$cloud_application_select_0_checkbox = '';
+		$cloud_application_select_1_label = '';
+		$cloud_application_select_1_checkbox = '';
+		$cloud_application_select_2_label = '';
+		$cloud_application_select_2_checkbox = '';
+		$cloud_application_select_3_label = '';
+		$cloud_application_select_3_checkbox = '';
+		$cloud_application_select_4_label = '';
+		$cloud_application_select_4_checkbox = '';
+		$cloud_application_select_5_label = '';
+		$cloud_application_select_5_checkbox = '';
+		$cloud_application_select_6_label = '';
+		$cloud_application_select_6_checkbox = '';
+		$cloud_ha_select_label = '';
+		$cloud_ha_select_checkbox = '';
+		$cloud_hostname_input_html = '';
+
 		$volume_select_html = $elements['volumeselect'];
 
-		$cloud_virtualization_select_html = $elements['cloud_virtualization_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_virtualization_select']) && is_object($elements['cloud_virtualization_select']->get_elements()[0])) {
+			$cloud_virtualization_select_html = $elements['cloud_virtualization_select']->get_elements()[0]->get_string();
+			
+		}
 
-		$cloud_kernel_select_html = $elements['cloud_kernel_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_kernel_select']) && is_object($elements['cloud_kernel_select']->get_elements()[0])) {
+			$cloud_kernel_select_html = $elements['cloud_kernel_select']->get_elements()[0]->get_string();
+			
+		}
 
-		$cloud_image_select_html = $elements['cloud_image_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_image_select']) && is_object($elements['cloud_image_select']->get_elements()[0])) {
+			$cloud_image_select_html = $elements['cloud_image_select']->get_elements()[0]->get_string();
+			
+		}
 
-		$cloud_memory_select_html = $elements['cloud_memory_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_memory_select']) && is_object($elements['cloud_memory_select']->get_elements()[0])) {
+			$cloud_memory_select_html = $elements['cloud_memory_select']->get_elements()[0]->get_string();
+			
+		}
 
-		$cloud_cpu_select_html = $elements['cloud_cpu_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_cpu_select']) && is_object($elements['cloud_cpu_select']->get_elements()[0])) {
+			$cloud_cpu_select_html = $elements['cloud_cpu_select']->get_elements()[0]->get_string();
+			
+		}
 
-		$cloud_disk_select_html = $elements['cloud_disk_select']->get_elements()[0]->get_string();
-		// apparently hidden not used
-		$cloud_network_select_html = $elements['cloud_network_select']->get_elements()[0]->get_string();
-
-		$cloud_ip_select_0_html = $elements['cloud_ip_select_0']->get_string();
-
-
-	//	echo var_export($cloud_memory_select_html);
-	//	echo var_export($cloud_cpu_select_html);
-	//	echo var_export($cloud_disk_select_html);
-	//	echo var_export($cloud_ip_select_0);
-		// echo var_export($elements['cloud_virtualization_select']->get_elements()[0]->get_string());
-
-		$cloud_application_select_0_label = $elements['cloud_application_select_0']->label;
-		$cloud_application_select_0_checkbox = $elements['cloud_application_select_0']->get_elements()[0]->get_string();
-		$cloud_application_select_1_label = $elements['cloud_application_select_1']->label;
-		$cloud_application_select_1_checkbox = $elements['cloud_application_select_1']->get_elements()[0]->get_string();
-		$cloud_application_select_2_label = $elements['cloud_application_select_2']->label;
-		$cloud_application_select_2_checkbox = $elements['cloud_application_select_2']->get_elements()[0]->get_string();
-		$cloud_application_select_3_label = $elements['cloud_application_select_3']->label;
-		$cloud_application_select_3_checkbox = $elements['cloud_application_select_3']->get_elements()[0]->get_string();
-		$cloud_application_select_4_label = $elements['cloud_application_select_4']->label;
-		$cloud_application_select_4_checkbox = $elements['cloud_application_select_4']->get_elements()[0]->get_string();
-		$cloud_application_select_5_label = $elements['cloud_application_select_5']->label;
-		$cloud_application_select_5_checkbox = $elements['cloud_application_select_5']->get_elements()[0]->get_string();
-		$cloud_application_select_6_label = $elements['cloud_application_select_6']->label;
-		$cloud_application_select_6_checkbox = $elements['cloud_application_select_6']->get_elements()[0]->get_string();
-		$cloud_ha_select_label = $elements['cloud_ha_select']->label;
-		$cloud_ha_select_checkbox = $elements['cloud_ha_select']->get_elements()[0]->get_string();
+		if (is_object($elements['cloud_disk_select']) && is_object($elements['cloud_disk_select']->get_elements()[0])) {
+			$cloud_disk_select_html = $elements['cloud_disk_select']->get_elements()[0]->get_string();
+			
+		}
 		
-		$cloud_hostname_input_html = $elements['cloud_hostname_input']->get_elements()[0]->get_string();
+		
+		if (is_object($elements['cloud_network_select']) && is_object($elements['cloud_network_select']->get_elements()[0])) {
+			// apparently hidden not used
+			$cloud_network_select_html = $elements['cloud_network_select']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_ip_select_0'])) {
+			$cloud_ip_select_0_html = $elements['cloud_ip_select_0']->get_string();
+		}
+
+		if (is_object($elements['cloud_application_select_0']) && is_object($elements['cloud_application_select_0']->get_elements()[0])) {
+			$cloud_application_select_0_label = $elements['cloud_application_select_0']->label;
+			$cloud_application_select_0_checkbox = $elements['cloud_application_select_0']->get_elements()[0]->get_string();
+			
+		}
+		
+		if (is_object($elements['cloud_application_select_1']) && is_object($elements['cloud_application_select_1']->get_elements()[0])) {
+			$cloud_application_select_1_label = $elements['cloud_application_select_1']->label;
+			$cloud_application_select_1_checkbox = $elements['cloud_application_select_1']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_application_select_2']) && is_object($elements['cloud_application_select_2']->get_elements()[0])) {
+			$cloud_application_select_2_label = $elements['cloud_application_select_2']->label;
+			$cloud_application_select_2_checkbox = $elements['cloud_application_select_2']->get_elements()[0]->get_string();
+			
+		}
+		
+		if (is_object($elements['cloud_application_select_3']) && is_object($elements['cloud_application_select_3']->get_elements()[0])) {
+			$cloud_application_select_3_label = $elements['cloud_application_select_3']->label;
+			$cloud_application_select_3_checkbox = $elements['cloud_application_select_3']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_application_select_4']) && is_object($elements['cloud_application_select_4']->get_elements()[0])) {
+			$cloud_application_select_4_label = $elements['cloud_application_select_4']->label;
+			$cloud_application_select_4_checkbox = $elements['cloud_application_select_4']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_application_select_5']) && is_object($elements['cloud_application_select_5']->get_elements()[0])) {
+			$cloud_application_select_5_label = $elements['cloud_application_select_5']->label;
+			$cloud_application_select_5_checkbox = $elements['cloud_application_select_5']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_application_select_6']) && is_object($elements['cloud_application_select_6']->get_elements()[0])) {
+			$cloud_application_select_6_label = $elements['cloud_application_select_6']->label;
+			$cloud_application_select_6_checkbox = $elements['cloud_application_select_6']->get_elements()[0]->get_string();
+			
+		}
+
+		if (is_object($elements['cloud_ha_select']) && is_object($elements['cloud_ha_select']->get_elements()[0])) {
+			$cloud_ha_select_label = $elements['cloud_ha_select']->label;
+			$cloud_ha_select_checkbox = $elements['cloud_ha_select']->get_elements()[0]->get_string();
+			
+		}
 
 
-		// echo var_export($cloud_application_select_1_label);
-		// echo var_export($cloud_application_select_6_label);
+		if (is_object($elements['cloud_hostname_input']) && is_object($elements['cloud_hostname_input']->get_elements()[0])) {
+			$cloud_hostname_input_html = $elements['cloud_hostname_input']->get_elements()[0]->get_string();
+			
+		}
 
-		// echo var_export($cloud_application_select_0_checkbox);
-
-		//echo var_export($cloud_application_select_0_html);
-
-		// echo var_export($cloud_hostname_input_html);
-
-		// die(1);
-
-		$t = $this->response->html->template($this->tpldir."/cloud-ui.create-modal.tpl.php");
-
-		$t->add($cloud_hostname_input_html, 'cloud_hostname_input');
 		$t->add($cloud_virtualization_select_html, 'cloud_virtualization_select');
-		$t->add($cloud_image_select_html, 'cloud_image_select');
 		$t->add($cloud_kernel_select_html, 'cloud_kernel_select');
-		$t->add($cloud_disk_select_html, 'cloud_disk_select');
-		$t->add($cloud_cpu_select_html, 'cloud_cpu_select');
+		$t->add($cloud_image_select_html, 'cloud_image_select');
 		$t->add($cloud_memory_select_html, 'cloud_memory_select');
+		$t->add($cloud_cpu_select_html, 'cloud_cpu_select');
+		$t->add($cloud_disk_select_html, 'cloud_disk_select');
 		$t->add($cloud_network_select_html, 'cloud_network_select');
 		$t->add($cloud_ip_select_0_html, 'cloud_ip_select_0');
 		$t->add($cloud_application_select_0_label, 'cloud_application_select_0_label');
@@ -184,10 +249,9 @@ var $use_api = true;
 		$t->add($cloud_application_select_6_checkbox, 'cloud_application_select_6_checkbox');
 		$t->add($cloud_ha_select_label, 'cloud_ha_select_label');
 		$t->add($cloud_ha_select_checkbox, 'cloud_ha_select_checkbox');
+		$t->add($cloud_hostname_input_html, 'cloud_hostname_input');
+
 		/*
-
-
-
 		if(isset($response->error)) {
 			$_REQUEST[$this->message_param] = $response->error;
 		}
@@ -303,7 +367,6 @@ var $use_api = true;
 		$this->use_api === true ? $use_api = 'true' : $use_api = 'false'; 
 		$t->add('var use_api = '.$use_api.';','js_use_api');
 		*/
-
 		return $t;
 	}
 

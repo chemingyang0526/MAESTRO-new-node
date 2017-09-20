@@ -28,7 +28,7 @@
 
 <script src="/cloud-fortis/js/vender/dataTables/jquery.dataTables.min.js" type="text/javascript"></script>
 <script src="/cloud-fortis/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="/cloud-fortis/js/jquery.steps.min.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/jquery.steps.js" type="text/javascript"></script>
 <script src="/cloud-fortis/js/ion.rangeSlider.js" type="text/javascript"></script>
 <!--
 <script src="/cloud-fortis/js/owl.carousel.min.js" type="text/javascript"></script>
@@ -354,8 +354,9 @@ $(document).ready(function() {
 			dataType: "html",
 			success : function (data) {
 				$("#create-vm-modal .modal-body").empty().append(data.slice(0,-20));
-				$("#create-vm-modal .modal-body input").addClass("form-control").addClass("require").removeClass("text");
-				$("#create-vm-modal .modal-body select").addClass("form-control").addClass("require");
+				$("#create-vm-modal .modal-body input[type='text']").addClass("form-control").addClass("required").removeClass("text");
+				$("#search-app").removeClass("required");
+				$("#create-vm-modal .modal-body select").addClass("form-control").addClass("required");
 
 				var form = $("#create-vm-form");
 

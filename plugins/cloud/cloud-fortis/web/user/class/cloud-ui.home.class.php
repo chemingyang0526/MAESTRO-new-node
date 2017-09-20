@@ -107,6 +107,10 @@ var $cloud_id;
 			$t = $this->response->html->template("./tpl/report-budget.tpl.php");
 			$t = $this->home($t);
 			$t->add($this->response->html->thisfile, "thisfile");
+			
+			if (isset($_GET['budgetid']) && is_numeric($_GET['budgetid'])) {
+				$t->add($_GET['budgetid'], "budgetid");
+			}
 			$stop = 1;
 		}
 

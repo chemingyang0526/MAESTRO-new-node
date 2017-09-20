@@ -8,7 +8,7 @@ if (typeof(repflag) !='undefined' && repflag == true) {
 	changereporte();
 }
 
-
+/*
 
 var remid = '';
 var globalid = '';
@@ -267,6 +267,7 @@ $('#saveperiod').click(function(){
 			});
 });
 
+
 $('.editright').focusout(function(){
 	console.log('save');
 	var val = $(this).val();
@@ -327,185 +328,6 @@ $('.editright').focusout(function(){
 			});
 
 });
-
-
-
-$('#remform').click(function(){
-	var url = '/cloud-fortis/user/index.php?budget=yes';
-	var dataval = 'rembudgets=1&remid='+remid;
-	var bds = '';
-			$.ajax({
-				url : url,
-				type: "POST",
-				data: dataval,
-				cache: false,
-				async: false,
-				dataType: "html",
-				success : function (data) {
-					$('.lead').hide();
-					if (data == 'remdone') {
-						$('.lead').hide();
-						alert('Removed succesfully');
-						$('#popupremconfirm').hide();
-						location.reload();
-					} 
-				}
-			});
-});
-
-if ( ( typeof(budgetpage) != 'undefined' ) && ( budgetpage == true) ) {
-	var url = '/cloud-fortis/user/index.php?budget=yes';
-	var dataval = 'getbudgets=1';
-	var bds = '';
-
-	$.ajax({
-		url : url,
-		type: "POST",
-		data: dataval,
-		cache: false,
-		async: false,
-		dataType: "html",
-		success : function (data) {
-			$('.lead').hide();
-			if (data != 'none') {
-				$('.lead').hide();
-				//console.log(data);
-				bds = JSON.parse(data);
-			} else {
-				alert('Have not got any data of this period');
-			}
-		}
-	});
-
-	//var servers = '<li class="carstart">'; 
-	var i = 0;
-	var budgets = [];
-
-	$.each(bds, function(key, serv) {
-		//if (i == 0) {
-			$('#budgets').append('<option value="' + key +  '" ' + (i == 0 ? 'selected' : '') + '>&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
-		//}
-
-		var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"' + (i > 0 ? ' style="display:none;" ' : '') + '><tbody>';
-		html	+=		'<tr><td style="width: 40%"><strong>' + "CPU:" + 			'</strong></td><td>' + serv.cpu + 		'</td></tr>';
-		html	+=		'<tr><td style="width: 40%"><strong>' + "Storage:" + 		'</strong></td><td>' + serv.storage + 	'</td></tr>';
-		html	+=		'<tr><td style="width: 40%"><strong>' + "Memory:" + 		'</strong></td><td>' + serv.memory + 	'</td></tr>';
-		html	+=		'<tr><td style="width: 40%"><strong>' + "Virtualization:" +	'</strong></td><td>' + serv.vm + 		'</td></tr>';
-		html	+=		'<tr><td style="width: 40%"><strong>' + "Network:" +		'</strong></td><td>' + serv.network + 	'</td></tr>';
-		html	+=	'</tbody></table>';
-
-		$("#budgets-setting").append(html);
-
-		var html_alerts = '';
-
-		if (serv.havealerts) {
-			html_alerts =	'<table id="alerts-' +  key + '" class="table table-hover table-stripped budget-alerts"' + (i > 0 ? ' style="display:none;" ' : '') + '>';
-			html_alerts +=		'<tbody><tr><td style="width: 50%"><strong>' + "% of Budget" + '</strong></td><td><strong>' + "Action" + '</strong></td></tr>';
-
-			for (j = 0; j < serv.alerts.length; j++) {
-				html_alerts +=	'<tr><td style="width: 50%">' + serv.alerts[j] + '</td><td><a href="#"><i class="fa fa-minus-circle" style="color:red"></i>&nbsp;Remove</a></td></tr>';
-			}
-			html_alerts	+=	'</tbody></table>';
-		} else {
-			html_alerts = 	'<label id="alerts-' + key + '" ' + (i > 0 ? ' style="display:none;" ' : '') + ' class="budget-alerts"><strong>There is no alert set up for this budget.</strong></label>';
-		}
-
-		$("#budgets-alert").append(html_alerts);
-
-		i++;
-	});
-
-	$("#budgets").on("change", function () {
-		var id = $(this).val();
-
-		$(".budget-resources").hide();
-		$(".budget-alerts").hide();
-		$("#resources-"+id).show();
-		$("#alerts-"+id).show();
-	
-		plot_budget_total(bds[id]);
-
-	});
-
-	function plot_budget_total(serv) {
-		//console.log(serv);
-
-		var total_budget = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
-		var column_x = ['x'];
-		var total_y = ['total budgeted'];
-
-		var date_loop	= new Date(serv.date_start);
-		var date_end	= new Date(serv.date_end);
-
-		while (date_loop <= date_end) {
-
-			//console.log("looping");
-			//console.log(date_loop);
-			//console.log(date_end);
-
-			column_x.push(parseDate(date_loop, "Y-M-D"));
-			total_y.push(total_budget);
-			date_loop.setDate(date_loop.getDate() + 15);
-		}
-		time_series_chart("#budget-vs-spent-chart", [column_x, total_y]);
-	}
-
-	function time_series_chart(bindto, data) {
-
-	//console.log("data");
-	console.log(data);
-
-    /* data = [
-        ['x', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01', '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01'],
-        ['total',             2300, 2100, 2250, 2140, 2260, 2150, 2000, 2400],
-    ]; */
-
-        var chart = c3.generate({
-            bindto: bindto,
-            data: {
-                x: 'x',
-                columns: data,
-                type: 'spline',
-                color: function (color, d) {
-                    return seriesColors[d.index];
-                },
-            },
-            axis: {
-                x:  {
-                    type: 'timeseries',
-                    tick: {
-                        format: '%Y-%m-%d'
-                    }
-                },
-                y:  {
-                    label: {
-                        text: 'total cost ($)'
-                    }
-                }
-            },
-            grid: {
-                y: {
-                    show: true
-                }
-            },
-            legend: {
-                show: false
-            }  
-        });
-    }
-	// if (i > 0) {
-	//	$('.carbudgbtn').show();
-	// }
-
-	//$('#namespaces').html(servers);
-	//$('.carbudget').show();
-
-	// if ($('.jcarousel').length > 0) {
-	//		$('.jcarousel').jcarousel();
-	// }
-}
-
-
 
 
 $('body').on('click', '.budgservn', function(){
@@ -623,6 +445,9 @@ $('body').on('click', '.budgservn', function(){
 $('body').on('click','.rempercent', function(){
 	$(this).closest('tr').remove();
 });
+
+*/
+
 
 $('#content_container').click(function(){
 	$('.reportdropdown').hide();

@@ -82,20 +82,20 @@ function get_limits() {
 
 function make_current_monthly_billing(binding, data, units) {
 	// chart.js polar area chart
-
 	var labels = ["cpu","storage","memory","virtualization","networking"];
 	var numbers = [to_num(data.cpu), to_num(data.storage), to_num(data.memory), to_num(data.virtualization), to_num(data.networking)];
+	var max = Math.max.apply(null, numbers);
+	var min = max / 8;
+	var normalized_numbers = [Math.max(numbers[0],min), Math.max(numbers[1],min), Math.max(numbers[2],min), Math.max(numbers[3],min), Math.max(numbers[4],min)];
 	var legend_arr = [[data.cpu,"cpu"],[data.storage,"storage"],[data.memory,"memory"],[data.virtualization,"virtualization"],[data.networking,"networking"]];
-
 	var legend = renderDonutLegend(legend_arr, binding);
 	$('#chartdiv-inventory-'+binding+'-legend').html('');
 	$('#chartdiv-inventory-'+binding+'-legend').append(legend);
 	var color = Chart.helpers.color;
-
 	var config = {
 		data: {
 			datasets: [{
-				data: numbers,
+				data: normalized_numbers,
 				backgroundColor: [
 					color(seriesColors[0]).rgbString(),
 					color(seriesColors[1]).rgbString(),
@@ -139,11 +139,12 @@ function make_current_monthly_billing(binding, data, units) {
 				}
 			},
 			tooltips: {
+				enabled: true,
 				callbacks: {
 					label: function(tooltipItems, data) {
-						return data.labels[tooltipItems.index] +': $' + tooltipItems.yLabel;
+						return data.labels[tooltipItems.index] +': $' + numbers[tooltipItems.index];
 					}
-				}
+				} 
 			}
 		}
 	};
@@ -152,7 +153,8 @@ function make_current_monthly_billing(binding, data, units) {
 	var ctx = document.getElementById("chartdiv-inventory-"+binding);
 	window.myPolarArea = Chart.PolarArea(ctx, config);
 	$("#monthlybilling-total").text(data.all);
-}
+
+} 
 
 function make_monthly_chart(binding, monthlydata, units) {
 
