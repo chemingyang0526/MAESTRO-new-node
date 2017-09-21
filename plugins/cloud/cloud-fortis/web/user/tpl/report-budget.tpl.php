@@ -219,7 +219,6 @@ $(document).ready(function() {
 				} else {
 					elem = $("#budgets option:first-of-type");
 				}
-				
 				$(elem).prop("selected", true);
 				var key = $(elem).attr("key");
 				$("#resources-" + key).show();
@@ -312,7 +311,7 @@ $(document).ready(function() {
 					plot_budget(bds[key], $(this).val());
 				});
 
-				plot_budget(bds[1], 'total');
+				plot_budget(bds[key], 'total');
 
 			} else {
 				$("#budgets-setting").append("<span><strong>No Budget has been set up.</strong></span>");
@@ -589,7 +588,7 @@ $(document).ready(function() {
 				<div class="card-block">
 					<div class="row">
 						<div class="col-sm-4 dashboard">
-							<section class="card">  
+							<section class="card" style="height: 18rem;">  
 								<div class="card-block">
 									<div class="panel-heading">
 										<div class="panel-control">
@@ -597,12 +596,12 @@ $(document).ready(function() {
 										</div>
 									</div>
 									<div>
-										<div id="budgets-setting" style="height: 15rem;">
+										<div id="budgets-setting">
 										</div>
 									</div>
 								</div>
 							</section>
-							<section class="card">  
+							<section class="card" style="height: 22rem;">  
 								<div class="card-block">
 									<div class="panel-heading">
 										<div class="panel-control">
@@ -610,14 +609,14 @@ $(document).ready(function() {
 										</div>
 									</div>
 									<div>
-										<div id="budgets-alert" style="height: 15rem;">
+										<div id="budgets-alert">
 										</div>
 									</div>
 								</div>
 							</section>
 						</div>
 						<div class="col-sm-8 dashboard">
-							<section class="card">  
+							<section class="card" style="height: 41.35rem;">  
 								<div class="card-block">
 									<div class="panel-heading">
 										<div class="panel-control">
@@ -633,7 +632,7 @@ $(document).ready(function() {
 										</div>
 									</div>
 									<div>
-										<div id="budget-vs-spent-chart" style="height: 35.35rem;">
+										<div id="budget-vs-spent-chart" style="height: 37rem;">
 										</div>
 									</div>
 								</div>
