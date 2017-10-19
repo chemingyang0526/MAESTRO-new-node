@@ -81,16 +81,31 @@ class cloudVirtualMachine:
         
     def azureVmList(self):
         compute_client = self.azureConnection()
-        for vm in compute_client.virtual_machines.list_all():
-            vmID = vm.id
-            resourceGroup = vmID.split("/")[4]
-            v_m = compute_client.virtual_machines.get(resourceGroup, vm.name, expand = 'instanceview')
-            print vmID
+        az_vms = compute_client.virtual_machines.list_all()
+        return az_vms
+    
+    def azCpuRam(self, vm_size):
+        with open('/usr/share/htvcenter/web/base/server/cloud/script/azurePackages.json') as d:
+            az_packages = json.load(d)
+        for az_package in az_packages:
+            if az_package['name'] == vm_size:
+                return az_package['numberOfCores'], az_package['memoryInMb']
 
 if __name__ == "__main__":
     if sys.argv[1] == "az":
+        vmList = []
         azureVms = cloudVirtualMachine()
-        azureVms.azureVmList()
+        az_vms = azureVms.azureVmList()
+        try:
+            for vm in az_vms:
+                vm_name = vm.id.split("/")[8]
+                vm_core = azureVms.azCpuRam(vm.hardware_profile.vm_size)[0]
+                vm_memory = azureVms.azCpuRam(vm.hardware_profile.vm_size)[1]
+                vmList.append(vm_name + "_" + str(vm_core) + "_" + str(vm_memory))
+            print json.dumps(vmList, sort_keys=True, separators=(',', ': '))
+            sys.exit(1)
+        except Exception as e:
+            print str(e)
     else:
         instanceList = []
         awsInstances = cloudVirtualMachine()

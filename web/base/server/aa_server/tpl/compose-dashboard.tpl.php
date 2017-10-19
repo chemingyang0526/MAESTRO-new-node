@@ -175,9 +175,9 @@ $('.modal').on('hidden.bs.modal', function(){
 	$(this).find('form')[0].reset();
 });
 
-function serverlists(type) {
+function serverlists(type, profile) {
 	$.ajax({
-	  url: 'index.php?base=aa_server&controller=compose&request='+type,
+	  url: 'index.php?base=aa_server&controller=compose&request='+type+'&profile='+profile,
 	})
 	.done(function(d) {
 		var serverList = jQuery.parseJSON(d);
@@ -282,25 +282,26 @@ jQuery().ready(function() {
 			//console.log(hostTypeVal);
 			if (hostTypeVal == "physical") {
 				$("#sf3 h4").text("Physical Hosts");
-				serverlists('physical');
+				serverlists('physical', 'local');
 			} else if (hostTypeVal == "aws") {
 				$("#sf3 h4").text("AWS Hosts");
 				var awsServer = '<div class="servers-to-compose"><p id="load-aws-instance"><i class="fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
 				$("#sf3 .col-lg-6").html(awsServer);
-				serverlists('aws');
+				serverlists('aws', 'cloud');
 			} else if (hostTypeVal == "azure") {
 				$("#sf3 h4").text("Azure Hosts");
 				var azServer = '<div class="servers-to-compose"><p id="load-aws-instance"><i class="fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
 				$("#sf3 .col-lg-6").html(azServer);
+				serverlists('az', 'cloud');
 			} else if (hostTypeVal == "och") {
 				$("#sf3 h4").text("OCH Hosts");
-				serverlists('och');
+				serverlists('och', 'local');
 			} else if (hostTypeVal == "vmware") {
 				$("#sf3 h4").text("VMware Hosts");
-				serverlists('vmware');
+				serverlists('vmware', 'local');
 			} else if (hostTypeVal == "vsphere") {
 				$("#sf3 h4").text("VSphere Hosts");
-				serverlists('vsphere');
+				serverlists('vsphere', 'local');
 			} else {
 				$("#sf3 h4").text("Servers - Errors!");
 				$("#sf3 .col-lg-6").html("<p>An error occured!</p>");

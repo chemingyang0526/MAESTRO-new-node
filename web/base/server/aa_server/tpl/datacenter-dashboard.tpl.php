@@ -269,11 +269,11 @@
 
 		$.when(deferred).done(function (v) {
 			var data = JSON.parse(v);
-			var active = parseInt(data[0]);
-			var inactive = parseInt(data[1]);
-			var total_aws_vms = active + inactive;
+			var total = parseInt(data[0]);
+			var active = parseInt(data[1]);
+			var inactive = total - active;
 
-			append_to_table("#vmstable tbody", "AWS EC2", total_aws_vms, active, inactive);
+			append_to_table("#vmstable tbody", "AWS EC2", total, active, inactive);
 		});
 	}
 
@@ -287,11 +287,11 @@
 	
 		$.when(deferred).done(function (v) {
 			var data = JSON.parse(v);
-			var active = parseInt(data[0]);
-			var inactive = parseInt(data[1]);
-			var total_azure_vms = active + inactive;
+			var total = parseInt(data[0]);
+			var active = parseInt(data[1]);
+			var inactive = total - active;
 
-			append_to_table("#vmstable tbody", "Azure VM", total_azure_vms, active, inactive);
+			append_to_table("#vmstable tbody", "Azure VM", total, active, inactive);
 		});
 	}
 

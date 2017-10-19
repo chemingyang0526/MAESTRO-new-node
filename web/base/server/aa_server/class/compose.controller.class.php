@@ -119,42 +119,61 @@ var $lang = array(
 				}
 			}
 			
-			foreach ($resources as $index => $resource_db) {
-				$resource = new resource();
-				$resource->get_instance_by_id($resource_db["resource_id"]);
-				$res_id = $resource->id;
-				if( ($resource->id == $resource->vhostid) && ($resource->id != 0) && !in_array($resource->id, $compose_resource_array)){
-					$virtualization = new virtualization();
-					$virtualization->get_instance_by_id($resource->vtype);
-					if ($_GET['request'] == 'och'){
-						if($virtualization->name == "KVM Host" || $virtualization->name == "OCH Host"){
-							$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $resource_db['resource_memtotal'], 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
-						}
-					} else if ($_GET['request'] == 'vmware'){
-						if($virtualization->name == "ESX Host" || $virtualization->name == "VMware Host"){
-							$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $resource_db['resource_memtotal'], 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
-						}
-					} else if ($_GET['request'] == 'physical'){
-						if($virtualization->name == "Physical System"){
-							$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $resource_db['resource_memtotal'], 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
-						}
-					} else if ($_GET['request'] == 'vsphere'){
-						if($virtualization->name == "vSphere Host"){
-							$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $resource_db['resource_memtotal'], 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
-						}
-					} else if ($_GET['request'] == 'aws'){
-							$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py aws');
-							$ec2_info = json_decode($ec2_info_dump, true);
-							foreach($ec2_info as $k => $v) {
-								$temp = explode("_", $v);
-								if(!in_array($temp[0], $compose_resource_array)) {
-									$host_array[] = array('resource_id' => $temp[0], 'resource_hostname' => $temp[0] . " (".$temp[1]. ")", 'resource_memtotal' => $temp[7], 'resource_cpunumber' => $temp[6], 'virtualization_name' => 'AWS Instance - '.$temp[5]);
-								}
+			if($_GET['profile'] == "local"){
+				foreach ($resources as $index => $resource_db) {
+					$resource = new resource();
+					$resource->get_instance_by_id($resource_db["resource_id"]);
+					$res_id = $resource->id;
+					if( ($resource->id == $resource->vhostid) && ($resource->id != 0) && !in_array($resource->id, $compose_resource_array)){
+						$virtualization = new virtualization();
+						$virtualization->get_instance_by_id($resource->vtype);
+						
+						$memInGB = ($resource_db['resource_memtotal'] / 1024);
+						$memInGB = number_format((float) $memInGB, 2, '.', '');
+						
+						if ($_GET['request'] == 'och'){
+							if($virtualization->name == "KVM Host" || $virtualization->name == "OCH Host"){
+								$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
 							}
-					} else {
-						$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $resource_db['resource_memtotal'], 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
+						} else if ($_GET['request'] == 'vmware'){
+							if($virtualization->name == "ESX Host" || $virtualization->name == "VMware Host"){
+								$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
+							}
+						} else if ($_GET['request'] == 'physical'){
+							if($virtualization->name == "Physical System"){
+								$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
+							}
+						} else if ($_GET['request'] == 'vsphere'){
+							if($virtualization->name == "vSphere Host"){
+								$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
+							}
+						} else {
+							$host_array[] = array('resource_id' => $resource->id, 'resource_hostname' => $resource_db['resource_hostname'], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $resource_db['resource_cpunumber'], 'virtualization_name' => $virtualization->name);
+						}
 					}
 				}
+			} else if($_GET['profile'] == "cloud") {
+				if ($_GET['request'] == 'aws') {
+					$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py aws');
+					$ec2_info = json_decode($ec2_info_dump, true);
+					foreach($ec2_info as $k => $v) {
+						$temp = explode("_", $v);
+						if(!in_array($temp[0], $compose_resource_array)) {
+							$host_array[] = array('resource_id' => $temp[0], 'resource_hostname' => $temp[0] . " (".$temp[1]. ")", 'resource_memtotal' => $temp[7], 'resource_cpunumber' => $temp[6], 'virtualization_name' => 'AWS Instance - '.$temp[5]);
+						}
+					}
+				} else if ($_GET['request'] == 'az') {
+					$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py az');
+					$ec2_info = json_decode($ec2_info_dump, true);
+					foreach($ec2_info as $k => $v) {
+						$temp = explode("_", $v);
+						$memInGB = ($temp[2] / 1024);
+						$memInGB = number_format((float) $memInGB, 2, '.', '');
+						if(!in_array($temp[0], $compose_resource_array)) {
+							$host_array[] = array('resource_id' => $temp[0], 'resource_hostname' => $temp[0], 'resource_memtotal' => $memInGB, 'resource_cpunumber' => $temp[1], 'virtualization_name' => 'Azure VM');
+						}
+					}
+				} 
 			}
 			echo json_encode($host_array);
 			die();

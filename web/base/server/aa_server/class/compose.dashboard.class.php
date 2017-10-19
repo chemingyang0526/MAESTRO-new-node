@@ -102,10 +102,10 @@ function action() {
 		$appTemp = explode(",", $dbSql[$i]['compose_appliances']);
 		$appName = "";
 		$count = 1;
+		$memInGB = $dbSql[$i]['compose_memory'];
 		
 		if($comp_type[0] == "cloud") {
 			$appName = $comp_type[1];
-			$memInGB = $dbSql[$i]['compose_memory'];
 		} else {
 			foreach($appTemp as $app){
 				if(count($appTemp) == $count){
@@ -115,8 +115,6 @@ function action() {
 				}
 				$count++;
 			}
-			$memInGB = ($dbSql[$i]['compose_memory'] / 1024);
-			$memInGB = number_format((float) $memInGB, 2, '.', '');
 		}
 		
 		$composeStatus = "";

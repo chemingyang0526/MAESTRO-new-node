@@ -208,6 +208,11 @@ form#composeform {
 
 /*** custom checkboxes ***/
 
+div.servers-to-compose {
+	max-height: 300px;
+	overflow-y: scroll;
+}
+
 div.servers-to-compose input[type=checkbox] { display:none; } /* to hide the checkbox itself */
 div.servers-to-compose input[type=checkbox] + label:before {
   font-family: FontAwesome;

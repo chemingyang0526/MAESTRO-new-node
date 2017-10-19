@@ -136,13 +136,25 @@ function add() {
 			
 			if($comp_type[0] == "cloud"){
 				if(trim($comp_type[1]) == "aws" || trim($comp_type[1]) == "AWS"){
-					$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py');
+					$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py aws');
 					$ec2_info = json_decode($ec2_info_dump, true);
 					foreach($ec2_info as $k => $v) {
 						$temp = explode("_", $v);
 						if($temp[0] == $appName) {
 							$mem_total = $mem_total + (int) $temp[7];
 							$cpuTotal = $cpuTotal + (int) $temp[6];
+						}
+					}
+				} else if(trim($comp_type[1]) == "azure" || trim($comp_type[1]) == "AZURE") {
+					$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py az');
+					$ec2_info = json_decode($ec2_info_dump, true);
+					foreach($ec2_info as $k => $v) {
+						$temp = explode("_", $v);
+						if($temp[0] == $appName) {
+							$memInGB = ($temp[2] / 1024);
+							$memInGB = number_format((float) $memInGB, 2, '.', '');
+							$mem_total = $mem_total + $memInGB;
+							$cpuTotal = $cpuTotal + (int) $temp[1];
 						}
 					}
 				}
@@ -230,7 +242,22 @@ function get_response() {
 	$composeType = explode(",", $compose_type);
 	if($composeType[0] == "cloud"){
 		if(trim($composeType[1]) == "aws" || trim($composeType[1]) == "AWS"){
-			$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py');
+			$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py aws');
+			$ec2_info = json_decode($ec2_info_dump, true);
+			foreach($ec2_info as $k => $v) {
+				$temp = explode("_", $v);
+				if( !in_array($temp[0], $compose_resource_array)) {
+					$i++;
+					$e['faram_f'.$i]['label']                       = $temp[0];
+					$e['faram_f'.$i]['object']['type']              = 'htmlobject_input';
+					$e['faram_f'.$i]['object']['attrib']['type']    = 'checkbox';
+					$e['faram_f'.$i]['object']['attrib']['name']    = 'appNames[]';
+					$e['faram_f'.$i]['object']['attrib']['value']   = $temp[0];
+					$e['faram_f'.$i]['object']['attrib']['checked'] = false;
+				}
+			}
+		} else if(trim($composeType[1]) == "azure" || trim($composeType[1]) == "AZURE"){
+			$ec2_info_dump = shell_exec('python '.$this->rootdir.'/server/aa_server/js/cloudvms.py az');
 			$ec2_info = json_decode($ec2_info_dump, true);
 			foreach($ec2_info as $k => $v) {
 				$temp = explode("_", $v);

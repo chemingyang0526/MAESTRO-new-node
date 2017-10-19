@@ -490,8 +490,8 @@ var $lang = array(
 					$count++;
 				}
 		
-				$memInGB = ($dbSql[$i]['compose_memory'] / 1024);
-				$memInGB = number_format((float) $memInGB, 2, '.', '');
+				$memInGB = $dbSql[$i]['compose_memory'];
+				//$memInGB = number_format((float) $memInGB, 2, '.', '');
 				$composeStatus = "";
 				if($dbSql[$i]['compose_status'] == 1) {
 					$composeStatus = '<div class="compose-status compose-active">active</div>';

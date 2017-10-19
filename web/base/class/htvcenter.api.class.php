@@ -62,10 +62,10 @@ var $rootdir;
 				$this->get_top_status();
 			break;
 			case 'get_aws_vm_count':
-				$this->get_aws_vm_count();
+				$this->get_vm_count("aws");
 			break;
 			case 'get_azure_vm_count':
-				$this->get_azure_vm_count();
+				$this->get_vm_count("az");
 			break;
 			case 'get_info_box':
 				$this->get_info_box();
@@ -306,63 +306,19 @@ var $rootdir;
 	 * @access public
 	 */
 	//--------------------------------------------
-	function get_aws_vm_count() {
+	function get_vm_count($host) {
 		$active = 0;
 		$inactive = 0;
-		$disk_info_dump = shell_exec('python '.$this->controller->rootdir.'/server/cloud/script/scanawsinstance.py');
-		$disk_info = json_decode($disk_info_dump, true);
+		$disk_info_dump = shell_exec('python '.$this->controller->rootdir.'/server/aa_server/js/cloudvirtualmachinestats.py '.$host);
+		$disk_info = split("[\r|\n]", trim($disk_info_dump));
 		$arr = array();
 
 		if(!empty($disk_info)){
 			foreach($disk_info as $k => $v){
-				$temp = explode("_", $v);
-				$vm_status = str_replace(array("{", "}", "u", "'"), "", $temp[3]);
-				$vm_status = explode(",", $vm_status);
-				$vm_status = str_replace(array('Code', ':', ' '), "", $vm_status[0]);
-			
-				if($vm_status == 16){
-					$active += 1;
-				} else if($vm_status == 80 || $vm_status == 48){
-					$inactive += 1;
-				}
+				$t = split("[:]", $v);
+				array_push($arr, $t[1]);
 			}
 		}
-		array_push($arr, $active);
-		array_push($arr, $inactive);
-
-		echo json_encode($arr);
-		die();
-	}
-
-	//--------------------------------------------
-	/**
-	 * Get Azure VMs count
-	 *
-	 * @access public
-	 */
-	//--------------------------------------------
-	function get_azure_vm_count() {
-		$active = 0;
-		$inactive = 0;
-		$vm_info_dump = shell_exec('python '.$this->controller->rootdir.'/server/cloud/script/listazurevm.py');
-		$vm_info = json_decode($vm_info_dump, true);
-		$arr = array();
-
-		if(!empty($vm_info)){
-			foreach($vm_info as $k => $v){
-				$temp = explode("_*_", $v);
-				$vm_status = str_replace(array("VM", " "), "", $temp[5]);
-				if($vm_status == "running"){
-					$active += 1;
-				} else {
-					$inactive += 1;
-				}
-
-			}
-		}
-		array_push($arr, $active);
-		array_push($arr, $inactive);
-
 		echo json_encode($arr);
 		die();
 	}
