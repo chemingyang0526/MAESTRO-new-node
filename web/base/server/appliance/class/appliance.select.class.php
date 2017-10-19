@@ -154,7 +154,7 @@ var $lang = array();
 			$div_html = '<div id="aws-resources-instance"><p id="load-aws-instance"><i class="fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
 		} else if($this->response->html->request()->get('resource_type_filter') == 'azure'){
 			$div_html = '<div id="azure-resources-vms"><p id="load-azure-instance"><i class="ffa fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
-		} else { 
+		} else if( is_numeric($this->response->html->request()->get('resource_type_filter')) ){
 			//$appliances = $appliance->display_overview(0, 10000, $table->sort, $table->order);
 			$appliances = $appliance->display_overview(0, 10000, 'appliance_id', 'ASC');
 			foreach ($appliances as $index => $appliance_db) {
@@ -453,7 +453,6 @@ var $lang = array();
 									if ($alinkcount == 0) {
 										$appliance_link_section .= '<div class="alinkleft">';
 									}
-
 								//	$alink->handler = $alink->handler.' onclick="wait();"';
 									//$alink->css = 'enable';
 									$alink->css = 'en-app fa fa-plus';
@@ -464,7 +463,7 @@ var $lang = array();
 										$alink->css = 'novnc-popup en-app fa fa-plus';
 										$alink->handler = "onclick=\"noVNCPOPUP('".$alink->href."'); return false;\"";
 									}
-									$alink = $alink->get_string();
+									$alink = $alink->get_string() . "<br />";
 									
 									if ($alinkcount == 5) {
 										$alinkcount = 0;
@@ -496,7 +495,7 @@ var $lang = array();
 				} else {
 					$resource_ip = $resource->ip;
 				}
-				$b[] = array('appliance_id' => $appliance_db["appliance_id"], 'appliance_name' => $appliance_db["appliance_name"], 'appliance_ip' => $resource_ip, 'appliance_values' => $str, 'appliance_comment' => $appliance_comment, 'appliance_virtualization' => $appliance_db["appliance_virtualization"], 'appliance_image' => $image_edit_link, 'appliance_total_memory' => $resource->memtotal, 'appliance_used_memory' => $resource->memused, 'appliance_cpu' => $resource->cpunumber, 'appliance_load' => $resource->load, 'appliance_edit' => $strEdit, 'appliance_start' => $strStart, 'appliance_release' => $release_resource, 'appliance_state' => $state_icon, 'appliance_state_value' => $state_text_value, 'appliance_link_section' => $appliance_comment,);
+				$b[] = array('appliance_id' => $appliance_db["appliance_id"], 'appliance_name' => $appliance_db["appliance_name"], 'appliance_ip' => $resource_ip, 'appliance_values' => $str, 'appliance_comment' => $appliance_comment, 'appliance_virtualization' => $appliance_db["appliance_virtualization"], 'appliance_image' => $image_edit_link, 'appliance_total_memory' => $resource->memtotal, 'appliance_used_memory' => $resource->memused, 'appliance_cpu' => $resource->cpunumber, 'appliance_load' => $resource->load, 'appliance_edit' => $strEdit, 'appliance_start' => $strStart, 'appliance_release' => $release_resource, 'appliance_state' => $state_icon, 'appliance_state_value' => $state_text_value, 'appliance_link_section' => $appliance_comment, 'appliance_virtualization_name' => $appliance_virtualization_name, );
 			}
 		}
 			
@@ -529,6 +528,8 @@ var $lang = array();
 				$div_html .= '</tr>'; 
 			}
 			$div_html .=	'</tbody></table>';
+		} else {
+			$div_html = '<div id="composed-servers"><p id="load-composed-server"><i class="ffa fa fa-spinner fa-spin fa-lg" aria-hidden="true"></i> loading</p></div>';
 		}
 		// Filter
 		$virtulization_types = new virtualization();
@@ -537,6 +538,7 @@ var $lang = array();
 		$filter[] = array('', '');
 		$filter[] = array("AWS EC2 Instances", "aws");
 		$filter[] = array("Azure VMs", "azure");
+		$filter[] = array("Composed Servers", "compose");
 		foreach( $list as $l) {
 			//$filter[] = array( $l['label'], $l['value']);
 			if (!preg_match('@networkboot@', $l['label'])) {
@@ -602,6 +604,7 @@ var $lang = array();
 		$d['add']    = $add->get_string();
 		$d['table']  = $table;
 		$d['div_html'] = $div_html;
+		$d['array_values'] = $b;
 		$d['resource_type_filter'] = $box1->get_string();
 		$d['resource_filter'] = $box2->get_string();
 

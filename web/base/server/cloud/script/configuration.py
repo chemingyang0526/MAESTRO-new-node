@@ -7,19 +7,22 @@ from azure.mgmt.network import NetworkManagementClient
 from azure.mgmt.compute import ComputeManagementClient
 from haikunator import Haikunator
 
-lines = []
-key_file = open('/usr/share/htvcenter/web/base/server/storage/script/azure.key')
-for line in key_file:
-    lines.append(line.rstrip("\n"))
-key_file.close()
-        
-subscription_id = lines[0].split(":")[1]
-clientid = lines[1].split(":")[1]
-secretkey = lines[2].split(":")[1]
-tenantid = lines[3].split(":")[1]
-    
+import os, MySQLdb, json, sys
+from phpserialize import serialize, unserialize
+
+db = MySQLdb.connect(host="localhost", user="root", passwd="htbase", db="htvcenter")
+cur = db.cursor()
+cur.execute("SELECT * FROM cloud_credential WHERE id = 2")
+row = cur.fetchone()
+unserializedData = unserialize(row[2])
+
+subscription_id = unserializedData['subscription_id']
+clientid = unserializedData['client_id']
+secretkey = unserializedData['secret_key']
+tenantid = unserializedData['tenant_id']
+
 credentials = ServicePrincipalCredentials(client_id=clientid, secret=secretkey, tenant=tenantid)
-    
+
 resource_client = ResourceManagementClient(credentials, subscription_id)
 compute_client = ComputeManagementClient(credentials, subscription_id)
 storage_client = StorageManagementClient(credentials, subscription_id)

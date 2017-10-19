@@ -409,7 +409,8 @@ div.card-header-top{
 
 div#cloud_appliances_table_wrapper div#cloud_appliances_table_filter input[type="search"],
 div#aws_instance_table_wrapper div#aws_instance_table_filter input[type="search"],
-div#azure_vm_table_wrapper div#azure_vm_table_filter input[type="search"]{
+div#azure_vm_table_wrapper div#azure_vm_table_filter input[type="search"], 
+div#maestro_composed_table_wrapper div#maestro_composed_table_filter input[type="search"] {
 	border: 1px solid #e1e5ea;
 	padding: 3px;
 }

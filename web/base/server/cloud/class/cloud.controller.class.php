@@ -92,6 +92,30 @@ var $lang = array(
 		'operating_system' => 'Operating System',
 		'vcpu' => 'V CPUs / Cores',
 	),
+	'addawsvmdisk' => array (
+		'tab' => 'Add virtual machine',
+		'label' => 'Add virtual machine',
+		'memory' => 'Memory / RAM',
+		'operating_system' => 'Operating System',
+		'vcpu' => 'V CPUs / Cores',
+		'disk_volume' => 'Disks / Volume Size',
+		'base' => 'Cloud platform',
+		'disk_volume_type' => 'Disk /Volume type',
+		'vm_monthly_price' => 'Monthly cost',
+		'aws_package' => 'Select package'
+	),
+	'addazvmdisk' => array (
+		'tab' => 'Add virtual machine',
+		'label' => 'Add virtual machine',
+		'memory' => 'Memory / RAM',
+		'operating_system' => 'Operating System',
+		'vcpu' => 'V CPUs / Cores',
+		'disk_volume' => 'Disks / Volume Size',
+		'base' => 'Cloud platform',
+		'disk_volume_type' => 'Disk /Volume type',
+		'vm_monthly_price' => 'Monthly cost',
+		'azure_package' => 'Select Azure package'
+	),
 	'add' => array (
 		'label' => 'Add resource',
 		'title' => 'Add a new resource as ',
@@ -372,16 +396,22 @@ var $lang = array(
 			$price_info = json_decode($price_dump, true);
 			
 			$aws_count = 0; $az_count = 0;
-			
+			$param_array['memory'] = $memory;
+			$param_array['cpu'] = $vcpu;
+			$param_array['os'] = $operating_system;
+			$param_array['monthly_price'] = "";
+			//$params = urlencode(serialize($param_array));
+			//echo $params;
 			foreach($price_info as $k => $v){
 				if(substr( $v, 0, 3 ) === "az_"){
 					$az_count++;
 					if($az_count % 2 != 0){
 						$az_data .= '<p class="price-item">';
 						$fomatted_price = number_format((float)str_replace("az_", "", $v), 2, '.', '');
+						$param_array['monthly_price'] = number_format(( (float)$fomatted_price * 24 * 30), 2, '.', '');
 						$az_data .= 'Price: $'.$fomatted_price.'/hour ( $'. number_format(( (float)$fomatted_price * 24 * 30), 2, '.', '') .'/month)<br />';
 					} else {
-						$az_data .= 'Description: '.str_replace("az_", "", $v).'<br />';
+						$az_data .= 'Description: '.str_replace("az_", "", $v).'<br /><a class="fa fa-plus" href="index.php?base=cloud&cloud_action=addazvmdisk&platform=az&params='.urlencode(serialize($param_array)).'"> Add disk and create vm</a><br />';
 						$az_data .= '</p>';
 					}
 				} else {
@@ -389,9 +419,10 @@ var $lang = array(
 					if($aws_count % 2 != 0){
 						$aws_data .= '<p class="price-item">';
 						$fomatted_price = number_format((float) $v, 2, '.', '');
+						$param_array['monthly_price'] = number_format(( (float)$fomatted_price * 24 * 30), 2, '.', '');
 						$aws_data .= 'Price: $' .$fomatted_price. '/hour ( $'.number_format( ((float) $fomatted_price * 24 * 30), 2, '.', '').'/month) <br />';
 					} else {
-						$aws_data .= 'Desccription: ' . $v. '<br />';
+						$aws_data .= 'Desccription: ' . $v. '<br /><a class="fa fa-plus" href="index.php?base=cloud&cloud_action=addawsvmdisk&platform=aws&params='.urlencode(serialize($param_array)).'"> Add disk and create vm</a><br />';
 						$aws_data .= '</p>';
 					}
 				}
@@ -542,6 +573,14 @@ var $lang = array(
 			case 'cloudprice':
 				$content[] = $this->select(false);
 				$content[] = $this->cloudprice(true);
+			break;
+			case 'addawsvmdisk':
+				$content[] = $this->select(false);
+				$content[] = $this->addawsvmdisk(true);
+			break;
+			case 'addazvmdisk':
+				$content[] = $this->select(false);
+				$content[] = $this->addazvmdisk(true);
 			break;
 			case 'add':
 				$content[] = $this->select(false);
@@ -715,6 +754,70 @@ var $lang = array(
 		$content['request'] = $this->response->get_array($this->actions_name, 'cloudprice' );
 		$content['onclick'] = false;
 		if($this->action === 'cloudprice'){
+			$content['active']  = true;
+		}
+		return $content;
+	}
+	
+	//--------------------------------------------
+	/**
+	 * Build Cloud Price Menu
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	function addawsvmdisk( $hidden = true ) {
+		$data = '';
+		if( $hidden === true ) {
+			require_once($this->rootdir.'/server/cloud/class/cloud.addawsvmdisk.class.php');
+			$controller = new addawsvmdisk($this->htvcenter, $this->response);
+			$controller->actions_name    = $this->actions_name;
+			$controller->tpldir          = $this->tpldir;
+			$controller->message_param   = $this->message_param;
+			$controller->identifier_name = $this->identifier_name;
+			$controller->lang            = $this->lang['addawsvmdisk'];
+			$data = $controller->action();
+		}
+		$content['label']   = $this->lang['addawsvmdisk']['tab'];
+		$content['value']   = $data;
+		$content['target']  = $this->response->html->thisfile;
+		$content['request'] = $this->response->get_array($this->actions_name, 'addawsvmdisk' );
+		$content['onclick'] = false;
+		if($this->action === 'addawsvmdisk'){
+			$content['active']  = true;
+		}
+		return $content;
+	}
+	
+	//--------------------------------------------
+	/**
+	 * Build Cloud Price Menu
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	function addazvmdisk( $hidden = true ) {
+		$data = '';
+		if( $hidden === true ) {
+			require_once($this->rootdir.'/server/cloud/class/cloud.addazvmdisk.class.php');
+			$controller = new addazvmdisk($this->htvcenter, $this->response);
+			$controller->actions_name    = $this->actions_name;
+			$controller->tpldir          = $this->tpldir;
+			$controller->message_param   = $this->message_param;
+			$controller->identifier_name = $this->identifier_name;
+			$controller->lang            = $this->lang['addazvmdisk'];
+			$data = $controller->action();
+		}
+		$content['label']   = $this->lang['addazvmdisk']['tab'];
+		$content['value']   = $data;
+		$content['target']  = $this->response->html->thisfile;
+		$content['request'] = $this->response->get_array($this->actions_name, 'addazvmdisk' );
+		$content['onclick'] = false;
+		if($this->action === 'addazvmdisk'){
 			$content['active']  = true;
 		}
 		return $content;
@@ -1339,152 +1442,5 @@ var $lang = array(
 		}
 		return $content;
 	}
-
-	//--------------------------------------------
-	/**
-	 * Reboot resource
-	 *
-	 * @access public
-	 * @param bool $hidden
-	 * @return array
-	 */
-	//--------------------------------------------
-	function reboot( $hidden = true ) {
-		$data = '';
-		if( $hidden === true ) {
-			require_once($this->rootdir.'/server/resource/class/resource.reboot.class.php');
-			$controller                  = new resource_reboot($this->htvcenter, $this->response);
-			$controller->actions_name    = $this->actions_name;
-			$controller->tpldir          = $this->tpldir;
-			$controller->message_param   = $this->message_param;
-			$controller->identifier_name = $this->identifier_name;
-			$controller->lang            = $this->lang['reboot'];
-			$controller->rootdir         = $this->rootdir;
-			$controller->prefix_tab      = $this->prefix_tab;
-			$data = $controller->action();
-		}
-		$content['label']   = 'Reboot';
-		$content['hidden']  = true;
-		$content['value']   = $data;
-		$content['target']  = $this->response->html->thisfile;
-		$content['request'] = $this->response->get_array($this->actions_name, 'reboot' );
-		$content['onclick'] = false;
-		if($this->action === 'reboot' || $this->action === $this->lang['select']['action_reboot']){
-			$content['active']  = true;
-		}
-		return $content;
-	}
-
-
-	//--------------------------------------------
-	/**
-	 * Poweroff resource
-	 *
-	 * @access public
-	 * @param bool $hidden
-	 * @return array
-	 */
-	//--------------------------------------------
-	function poweroff( $hidden = true ) {
-		$data = '';
-		if( $hidden === true ) {
-			require_once($this->rootdir.'/server/resource/class/resource.poweroff.class.php');
-			$controller                  = new resource_poweroff($this->htvcenter, $this->response);
-			$controller->actions_name    = $this->actions_name;
-			$controller->tpldir          = $this->tpldir;
-			$controller->message_param   = $this->message_param;
-			$controller->identifier_name = $this->identifier_name;
-			$controller->lang            = $this->lang['poweroff'];
-			$controller->rootdir         = $this->rootdir;
-			$controller->prefix_tab      = $this->prefix_tab;
-			$data = $controller->action();
-		}
-		$content['label']   = 'Poweroff';
-		$content['hidden']  = true;
-		$content['value']   = $data;
-		$content['target']  = $this->response->html->thisfile;
-		$content['request'] = $this->response->get_array($this->actions_name, 'poweroff' );
-		$content['onclick'] = false;
-		if($this->action === 'poweroff' || $this->action === $this->lang['select']['action_poweroff']){
-			$content['active']  = true;
-		}
-		return $content;
-	}
-
-	
-
-	//--------------------------------------------
-	/**
-	 * Edit resource
-	 *
-	 * @access public
-	 * @param bool $hidden
-	 * @return array
-	 */
-	//--------------------------------------------
-	function edit( $hidden = true ) {
-		$data = '';
-		if( $hidden === true ) {
-			require_once($this->rootdir.'/server/resource/class/resource.edit.class.php');
-			$controller                  = new resource_edit($this->htvcenter, $this->response);
-			$controller->actions_name    = $this->actions_name;
-			$controller->tpldir          = $this->tpldir;
-			$controller->message_param   = $this->message_param;
-			$controller->identifier_name = $this->identifier_name;
-			$controller->lang            = $this->lang['edit'];
-			$controller->rootdir         = $this->rootdir;
-			$controller->prefix_tab      = $this->prefix_tab;
-			$data = $controller->action();
-		}
-		$content['label']   = $this->lang['edit']['label'];
-		$content['value']   = $data;
-		$content['target']  = $this->response->html->thisfile;
-		$content['request'] = $this->response->get_array($this->actions_name, 'edit' );
-		$content['onclick'] = false;
-		if($this->action === 'edit' || $this->action === $this->lang['select']['action_edit']){
-			$content['active']  = true;
-		}
-		return $content;
-	}
-	
-	
-	//--------------------------------------------
-	/**
-	 * Load Plugin as new tab
-	 *
-	 * @access public
-	 * @return object
-	 */
-	//--------------------------------------------
-	function __loader() {
-
-		$plugin = $this->response->html->request()->get('rplugin');
-		$name   = $plugin;
-		$class  = $plugin;
-		if($this->response->html->request()->get('rcontroller') !== '') {
-			$class = $this->response->html->request()->get('rcontroller');
-			$name  = $class;
-		}
-		$class  = str_replace('-', '_', $class).'_controller';
-
-		// handle new response object
-		$response = $this->response->response();
-		$response->id = 'rload';
-		unset($response->params['resource[sort]']);
-		unset($response->params['resource[order]']);
-		unset($response->params['resource[limit]']);
-		unset($response->params['resource[offset]']);
-		unset($response->params['resource_filter']);
-		$response->add('rplugin', $plugin);
-		$response->add('rcontroller', $name);
-		$response->add($this->actions_name, 'load');
-
-		$path   = $this->htvcenter->get('webdir').'/plugins/'.$plugin.'/class/'.$name.'.controller.class.php';
-		$role = $this->htvcenter->role($response);
-		$data = $role->get_plugin($class, $path);
-		$data->pluginroot = '/plugins/'.$plugin;
-		return $data;
-	}
-
 }
 ?>

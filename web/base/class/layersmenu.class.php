@@ -1374,7 +1374,10 @@ function newTreeMenu(
 						$faicon = 'fa-dashboard';
 						$label = '<span class="label label-success pull-right">Top</span>';
 					break;
-
+					case 'Compose':
+						$faicon = 'fa-music';
+						$label = '';
+					break;
 					case 'Server':
 						if ( $this->tree[$cnt]['parsed_href'] != 'index.php?plugin=nagios3') {
 							$faicon = 'fa-server';

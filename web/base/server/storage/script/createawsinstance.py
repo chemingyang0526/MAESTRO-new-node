@@ -22,8 +22,8 @@ def createAWSInstance(ami_id, min_count, max_count, instance_type):
         MinCount=min_count, 
         MaxCount=max_count, 
         InstanceType=instance_type,
-        KeyName='HTBaseEC2',
-        SecurityGroupIds=['sg-4d9c893d', 'sg-d227efad'],
+        KeyName='HTBase',
+        SecurityGroupIds=['sg-3aa31d48', 'sg-c3ce4fb1'],
     )
     if instances:
         return "Instance(s) created successfully"

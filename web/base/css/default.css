@@ -1460,6 +1460,7 @@ td.network_manager_identifier input.checkbox {
 	#storageform #puppet_groups .right, #storageformaddn #puppet_groups .right {
 		 float: right;
 	    position: relative;
+	    top: -20px;
 	    width: 0;
 	}
  
@@ -1831,7 +1832,6 @@ td.kvm_identifier a {
 #volumepopup, #volumepopupvmf, #volumepopupwmware, #volumepopupmigr, #storageformkvm, #storageformkvmrem, #serverpopup, #volumepopupz, #volumepopuprem, #volumepopupzmail, #volumepopupnagios, #schedulerpopup, #trasherzconfirm, #trasherzconfirmhost, #poolservpopup, #schedulerconfirmpopup, #configpopup, #integratepopup, #volschedulerpopup, #volumepopupaddn {
 	/*width: 600px;*/
 	width: 50%;
-	min-width: 600px;
 	position: fixed;
 	top: 20%;
 	left: 25%;
@@ -4807,7 +4807,7 @@ div#btnsideee {
     border-color: #5fa2dd !important;
     color: #ffffff !important;
        position: relative;
-    right: 5% !important;
+    right: 38px !important;
     top: 10px;
 }
 
@@ -6094,6 +6094,7 @@ h2.dash {
     position: relative;
     text-align: center;
     top: 12px;
+    font-size: 15px;
 }
 
 .eventtime {
@@ -6110,7 +6111,7 @@ h2.dash {
 }
 .eventcount {
 	color: white;
-	font-size: 50px !important;
+	font-size: 30px;
 	position: relative;
 	top: 12px;
 }
@@ -6120,12 +6121,18 @@ h2.dash {
     width: 80%;
 }
 
-#warningeventbox, .orangero {
-	background-color: #ebaa4b !important;
+#warningeventbox {
+	background-color: rgb(72, 204, 132) !important;
+	cursor: pointer;
+}
+
+.orangero {
+	background-color: rgb(255, 205, 86) !important; /*#ebaa4b*/
 }
 
 #messageeventbox {
-	background-color: #5fa2dd !important;
+	background-color: #41bee9 !important; /*#5fa2dd*/
+	cursor: pointer;
 }
 
 .eventdescr {
@@ -6134,7 +6141,8 @@ h2.dash {
 }
 
 #erroreventbox {
-	background-color: #f76c51 !important;
+	background-color: rgb(251, 67, 74) !important; /*#f76c51*/
+	cursor: pointer;
 }
 
 .redero {

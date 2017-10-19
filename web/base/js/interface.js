@@ -3238,6 +3238,7 @@ $('#schedulertbtn').click(function(){
 // add citrix:
 
 		$('.citrixaddp').click(function(e) {
+			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=citrix&controller=citrix-discovery&citrix_discovery_action=add';
@@ -3259,6 +3260,7 @@ $('#schedulertbtn').click(function(){
 
 // add vmware:
 	$('.vmwareaddp').click(function(e) {
+			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=vmware-esx&controller=vmware-esx-discovery&vmware_esx_discovery_action=add';
@@ -3278,6 +3280,7 @@ $('#schedulertbtn').click(function(){
 // add hyperv:
 	
 	$('.hypervaddp').click(function(e) {
+			console.log('aaaaa');
   			e.preventDefault();
   			$('.lead').hide();
   			var hrefo = 'index.php?plugin=hyperv&controller=hyperv-discovery&hyperv_discovery_action=add';
@@ -3966,9 +3969,10 @@ $('#resource_tab0 .submit').click(function(e){
   		}
 
   		
+
   		var string = 'index.php?base=resource&resource%5Blimit%5D=20&resource%5Boffset%5D=0&resource%5Border%5D=ASC&resource%5Bsort%5D=resource_id&resource_action=select&resource_action%5B'+action+'%5D='+action+'&'+identifiers;
-		console.log(string);
-		$('#storageform').load(string+" #resource_tab1", function(){
+  		console.log(string);
+  		$('#storageform').load(string+" #resource_tab1", function(){
 	  			
 	  			$('#storageform select').selectpicker();
 	  			$('#storageform select').hide();
@@ -4406,8 +4410,7 @@ if (notpicker != true) {
 	// close event sidebar:
 
 	$('.sidebarallink .btn-danger').click(function(){
-			$('#content-container').css('width', '100%');
-			$('#aside-container').css('right', '-220px');
+		$('#aside-container').css('right', '-220px').removeClass("shown");
 	});
 
 	// --- end close event sidebar ---
@@ -4415,24 +4418,49 @@ if (notpicker != true) {
 	// events and right sidebar
 
 	$('#warningeventbox').click(function(){
-		$('#content-container').css('width', '83%');
-		$('#aside-container').css('right', '0px');
+		if (!$('#aside-container').hasClass("shown")) {
+			$('#aside-container').css('right', '0px').addClass("shown");
+		} else {
+			if ($('#demo-asd-tab-1').hasClass('active')) {
+				$('#aside-container').css('right', '-220px').removeClass("shown");
+				return true;
+			}
+		}
+		$('#demo-asd-tab-1').addClass('active in');
+		$('#demo-asd-tab-2').removeClass('active in');
+		$('#demo-asd-tab-3').removeClass('active in');
+		$('#asideul li').removeClass('active');
+		$('#asideul li.first').addClass('active');
 	});
 
 	$('#messageeventbox').click(function(){
-		$('#content-container').css('width', '83%');
-		$('#aside-container').css('right', '0px');
-		$('#demo-asd-tab-1').toggleClass('active in');
-		$('#demo-asd-tab-3').toggleClass('active in');
+		if (!$('#aside-container').hasClass("shown")) {
+			$('#aside-container').css('right', '0px').addClass("shown");
+		} else {
+			if ($('#demo-asd-tab-3').hasClass('active')) {
+				$('#aside-container').css('right', '-220px').removeClass("shown");
+				return true;
+			}
+		}
+		$('#demo-asd-tab-1').removeClass('active in');
+		$('#demo-asd-tab-2').removeClass('active in');
+		$('#demo-asd-tab-3').addClass('active in');
 		$('#asideul li').removeClass('active');
 		$('#asideul li.third').addClass('active');
 	});
 
 	$('#erroreventbox').click(function(){
-		$('#content-container').css('width', '83%');
-		$('#aside-container').css('right', '0px');
-		$('#demo-asd-tab-1').toggleClass('active in');
-		$('#demo-asd-tab-2').toggleClass('active in');
+		if (!$('#aside-container').hasClass("shown")) {
+			$('#aside-container').css('right', '0px').addClass("shown");
+		} else {
+			if ($('#demo-asd-tab-2').hasClass('active')) {
+				$('#aside-container').css('right', '-220px').removeClass("shown");
+				return true;
+			}
+		}
+		$('#demo-asd-tab-1').removeClass('active in');
+		$('#demo-asd-tab-2').addClass('active in');
+		$('#demo-asd-tab-3').removeClass('active in');
 		$('#asideul li').removeClass('active');
 		$('#asideul li.second').addClass('active');
 	});
@@ -4560,23 +4588,23 @@ if (notpicker != true) {
 
 	// hddprogress and memoryprogress in header
 
-		var hddp = $('#storagearea .progress-bar').attr('style');
-
+		var hddp = $('#storageareas .progress-bar').attr('style');
 		var mmp = $('.memoryprogress .progress-bar').attr('style');
+
+		// console.log(hddp);
+		// console.log(mmp);
+
 
 		if (typeof(hddp) == 'undefined') {
 			$('#ajaxbuf').load('/htvcenter/base/index.php?base=aa_server&controller=datacenter .memoryprogress', function(){
 						mmp = $('.memoryprogress .progress-bar').attr('style');
 						$('#ajaxbuf').load('/htvcenter/base/index.php?base=aa_server&controller=datacenter .hddprogress', function(){
 							hddp = $('.hddprogress .progress-bar').attr('style');
-							//console.log(hddp);
-							//console.log(mmp);
 							$('#ajaxbuf').remove();
 							headprogress(hddp, mmp);
 						});
 						
 			});
-	
 		} else {
 			headprogress(hddp, mmp);
 		}
@@ -5066,6 +5094,7 @@ function colorborder(objc) {
 			if (objc.find('.pill').hasClass('active')) {
 				color = '#9cc96b';
 				vlasso = 'panel-success';
+				console.log('aaaaa');
 			}
 
 			if (objc.find('.pill').hasClass('error')) {

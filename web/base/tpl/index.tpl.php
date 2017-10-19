@@ -16,7 +16,10 @@
 	<!--Open Sans Font [ OPTIONAL ] -->
  	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
 
-
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+ crossorigin="anonymous"></script>
+	<!-- <script src="{baseurl}/js/jquery-2.1.4.min.js"></script> -->
+	
 	<!--Bootstrap Stylesheet [ REQUIRED ]-->
 	<link href="{baseurl}/css/bootstrap.min.css" rel="stylesheet">
 
@@ -36,10 +39,7 @@
 
 	<!--Full Calendar [ OPTIONAL ]-->
 	<link href="{baseurl}/designplugins/fullcalendar/fullcalendar.css" rel="stylesheet">
-
-
-
-
+	
 	<!--Morris.js [ OPTIONAL ]-->
 	<link href="{baseurl}/designplugins/morris-js/morris.min.css" rel="stylesheet">
 	<!--Switchery [ OPTIONAL ]-->
@@ -54,11 +54,8 @@
 	<link href="{baseurl}/css/demo/nifty-demo.min.css" rel="stylesheet">
 	<link href="{baseurl}/js/treejs/themes/default/style.css" rel="stylesheet">
 
-{style}
+	{style}
 
-	
-	<script src="{baseurl}/js/jquery-2.1.4.min.js"></script>
-    
 	<script src="{baseurl}/js/treejs/jstree.js"></script>
 	
 
@@ -108,7 +105,7 @@
 
 	-->
 
-	<script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function(){
 	$("#popupInfoClose").click(function(){
 		disablePopup();
@@ -186,116 +183,75 @@ function get_info_box() {
 		}
 	});
 }
-
-
-				
 </script>
-		
-
 </head>
-
 <!--TIPS-->
 <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
-
 <body>
-
-
-
 	<div id="container" class="effect mainnav-lg">
-		
 		<!--NAVBAR-->
 		<!--===================================================-->
 		<header id="navbar">
 			<div id="navbar-container" class="boxed">
-
 				<!--Brand logo & name-->
 				<!--================================-->
 				<div class="navbar-header">
-					<a href="/htvcenter/base/" class="navbar-brand">
-						<img src="{baseurl}/img/htbaselogo.png" alt="HTBase Logo" title="HTBase Logo" class="brand-icon">
-					
-					</a>
+					<a href="/htvcenter/base/" class="navbar-brand"><img src="{baseurl}/img/htbaselogo.png" alt="HTBase Logo" title="HTBase Logo" class="brand-icon"></a>
 				</div>
 				<!--================================-->
 				<!--End brand logo & name-->
-
-{top}
-
+				{top}
 			</div>
 		</header>
 		<!--===================================================-->
 		<!--END NAVBAR-->
 
 		<div class="boxed">
-
 			<!--CONTENT CONTAINER-->
 			<!--===================================================-->
 			<div id="content-container">
-				  {content}
-
-				  <div id="volumepopupaddn" class="modal-dialog">
-<div class="panel">
-                    
-                                <!-- Classic Form Wizard -->
-                                <!--===================================================-->
-                                <div id="demo-cls-wz">
-                    
-                                    <!--Nav-->
-                                    <ul class="wz-nav-off wz-icon-inline wz-classic">
-                                        <li class="col-xs-3 bg-info active">
-                                            <a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true">
-                                                <span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-server"></i></span> Server Alert
-                                            </a>
-                                        </li>
-                                        <div class="volumepopupclass"><a id="volumepopupcloseaddn"><i class="fa fa-icon fa-close"></i></a></div>
-                                        
-                                    </ul>
-                    
-                                    <!--Progress bar-->
-                                    <div class="progress progress-sm progress-striped active">
-                                        <div class="progress-bar progress-bar-info" style="width: 100%;"></div>
-                                    </div>
-                    
-                    
-                                    <!--Form-->
-                                    <div class="form-horizontal mar-top">
-                                        <div class="panel-body">
-                                            <div class="tab-content">
-                    
-                                                <!--First tab-->
-                                                <div class="tab-pane active in" id="demo-cls-tab1">
-                                                    <div id="storageformaddn">
-                                                  
-                                                    </div>
-                                                </div>
-                    
-                                                
-                                            </div>
-                                        </div>
-                    
-                    
-                                    </div>
-                                </div>
-                                <!--===================================================-->
-                                <!-- End Classic Form Wizard -->
-                    
-                            </div>
-</div>
+				{content}
+				<div id="volumepopupaddn" class="modal-dialog">
+					<div class="panel">
+						<!-- Classic Form Wizard -->
+						<!--===================================================-->
+						<div id="demo-cls-wz">
+							<!--Nav-->
+							<ul class="wz-nav-off wz-icon-inline wz-classic">
+								<li class="col-xs-3 bg-info active">
+									<a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true">
+										<span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-server"></i></span> Server Alert
+									</a>
+								</li>
+								<div class="volumepopupclass"><a id="volumepopupcloseaddn"><i class="fa fa-icon fa-close"></i></a></div>
+							</ul>
+							<!--Progress bar-->
+							<div class="progress progress-sm progress-striped active">
+								<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+							</div>
+							<!--Form-->
+							<div class="form-horizontal mar-top">
+								<div class="panel-body">
+									<div class="tab-content">
+										<!--First tab-->
+										<div class="tab-pane active in" id="demo-cls-tab1">
+											<div id="storageformaddn">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--===================================================-->
+						<!-- End Classic Form Wizard -->
+					</div>
+				</div>
 			</div>
-
-
-
 			<!--===================================================-->
 			<!--END CONTENT CONTAINER-->
-
-
-			
-					{menu}
-				
-
-				
-					<!--================================-->
-					<!--End menu-->
+			{menu}
+			<!--================================-->
+			<!--End menu-->
 
 				
 			
@@ -333,13 +289,10 @@ function get_info_box() {
 							</ul>
 							<!--================================-->
 							<!--End nav tabs-->
-
-
-
+							
 							<!-- Tabs Content -->
 							<!--================================-->
 							<div class="tab-content">
-
 								<!--First tab (Contact list)-->
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 								<div class="tab-pane fade in active" id="demo-asd-tab-1">
@@ -351,19 +304,12 @@ function get_info_box() {
 									<h4 class="pad-hor text-thin">
 										<i class="fa fa-bell"></i> Messages:
 									</h4>
-
 									<!--Works-->
 									<div class="list-group bg-trans" id="sidebarallwarnings">
 									</div>
-
-									
-									
-
 								</div>
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 								<!--End first tab (Contact list)-->
-
-
 								<!--Second tab (Custom layout)-->
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 								<div class="tab-pane fade" id="demo-asd-tab-2">
@@ -375,21 +321,15 @@ function get_info_box() {
 									<h4 class="pad-hor text-thin">
 										<i class="fa fa-exclamation-triangle"></i> Errors:
 									</h4>
-
 									<!--Works-->
 									<div class="list-group bg-trans" id="sidebarallerrors">
 									</div>
-
-
 								</div>
 								<!--End second tab (Custom layout)-->
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-
 								<!--Third tab (Settings)-->
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 								<div class="tab-pane fade" id="demo-asd-tab-3">
-									
 									<div class="sidebarallink">
 										<a href="index.php?base=event"><button class="btn btn-block btn-success mar-top">Go to events page</button></a>
 										<button class="btn btn-block btn-danger mar-top">Close events sidebar</button>
@@ -398,7 +338,6 @@ function get_info_box() {
 									<h4 class="pad-hor text-thin">
 										<i class="fa fa-envelope"></i> All Events:
 									</h4>
-
 									<!--Works-->
 									<div class="list-group bg-trans" id="sidebarallevents">
 									</div>
@@ -406,25 +345,17 @@ function get_info_box() {
 								</div>
 								<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 								<!--Third tab (Settings)-->
-
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</aside>
 			<!--===================================================-->
 			<!--END ASIDE-->
-
-
 		</div>
-
-		
-
 		<!-- FOOTER -->
 		<!--===================================================-->
 		<footer id="footer">
-
 			<!-- Visible when footer positions are fixed -->
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 			<div class="show-fixed pull-right">
@@ -435,7 +366,6 @@ function get_info_box() {
 							<div style="width: 80%" class="progress-bar progress-bar-danger"></div>
 						</div>
 					</li>
-
 					<li>
 						<p class="text-sm">Online Tutorial</p>
 						<div class="progress progress-sm progress-light-base">
@@ -447,42 +377,25 @@ function get_info_box() {
 					</li>
 				</ul>
 			</div>
-
-
-
 			<!-- Visible when footer positions are static -->
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 			<div class="hide-fixed pull-right pad-rgt">Maestro Enterprise</div>
-
-
-
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 			<!-- Remove the class name "show-fixed" and "hide-fixed" to make the content always appears. -->
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
 			<p class="pad-lft"></p>
-
-
-
 		</footer>
 		<!--===================================================-->
 		<!-- END FOOTER -->
-
 
 		<!-- SCROLL TOP BUTTON -->
 		<!--===================================================-->
 		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
 		<!--===================================================-->
-
-
-
 	</div>
 	<!--===================================================-->
 	<!-- END OF CONTAINER -->
 
-
-	
-	
 	<!-- SETTINGS - DEMO PURPOSE ONLY -->
 	<!--===================================================-->
 	<div id="demo-set" class="demo-set">
@@ -795,13 +708,13 @@ function get_info_box() {
 
 
 	<!--Demo script [ DEMONSTRATION ]-->
-	<script src="{baseurl}/js/demo/nifty-demo.js"></script>
+	<!-- <script src="{baseurl}/js/demo/nifty-demo.js"></script> -->
 
 
 	<!--Specify page [ SAMPLE ]-->
-	<script src="{baseurl}/js/demo/dashboard.js"></script>
+	<!-- <script src="{baseurl}/js/demo/dashboard.js"></script> -->
 
-		{jstranslation}
+	{jstranslation}
 	{script}
 	
 	
@@ -812,15 +725,15 @@ function get_info_box() {
 	<script src="{baseurl}/js/scroll.js"></script>
 	<script src="{baseurl}/js/multiselect.js" type="text/javascript"></script>
 	<script src="{baseurl}/js/jcarousel.min.js"></script>
+	
 	<script src="{baseurl}/js/interface.js" type="text/javascript"></script>
-	<!--<script src="{baseurl}/js/interface.js"></script>-->
+	
+	<script src="{baseurl}/js/htvcenter-ui.js" type="text/javascript"></script>
+	<script src="{baseurl}/designplugins/gauge-js/gauge.min.js"></script>
 
-<script src="{baseurl}/js/htvcenter-ui.js" type="text/javascript"></script>
-<script src="{baseurl}/designplugins/gauge-js/gauge.min.js"></script>
+	<!-- <script src="{baseurl}/js/demo/charts.js" type="text/javascript"></script> -->
 
-<script src="{baseurl}/js/demo/charts.js" type="text/javascript"></script>
-
-<link href="{baseurl}/designplugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet">
+	<link href="{baseurl}/designplugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet">
 	<script src="{baseurl}/designplugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
 	<!--Bootstrap Timepicker [ OPTIONAL ]-->
@@ -830,8 +743,6 @@ function get_info_box() {
 
 	<!--Sparkline [ OPTIONAL ]-->
     <script src="{baseurl}/designplugins/sparkline/jquery.sparkline.min.js"></script>
-
-
 
 	<!--
 
@@ -854,8 +765,5 @@ function get_info_box() {
 	Detailed information and more samples can be found in the document.
 
 	-->
-
-
-
 </body>
 </html>

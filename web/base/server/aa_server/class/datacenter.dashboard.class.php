@@ -176,6 +176,15 @@ var $lang = array();
 		$data = $this->storagetaken();
 		$t->add($data);
 
+		$data = $this->storagefiles();
+		$t->add($data);
+
+		$data = $this->gethosts();
+		$t->add($data);
+
+		$data = $this->getvms();
+		$t->add($data);
+
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -509,18 +518,23 @@ $d = array();
 			$storage->get_instance_by_id($value["storage_id"]);
 			
 			$resource = new resource();
+
 			$resource->get_instance_by_id($storage->resource_id);
-			
+
 			$deployment = new deployment();
 			$deployment->get_instance_by_id($storage->type);
 			
 			$cpumodel = str_replace('QEMU', 'OCH', $resource->cpumodel);
-
 			$d['cpu'] = $cpumodel;
+			$d['cpunumber'] = $resource->cpunumber;
+			$d['cpuload'] = $resource->load;
  			$d['memtotal'] = $resource->memtotal;
  			$d['memused'] = $resource->memused;
  			$d['swaptotal'] = $resource->swaptotal;
  			$d['swapused'] = $resource->swapused;
+
+
+
 
  			$mem = $d['memused']/($d['memtotal']/100);
  			$d['mempercent'] = round($mem);
@@ -560,6 +574,34 @@ $d = array();
 		$storage_list .= '</ul>';
 
 		$resource = new resource();
+
+		/* get number of cpu used and number of cpu available */
+		$resource_list = $resource->get_list();
+		$cpu_avail = 0;
+		$cpu_used = 0;
+		$mem_avail = 0;
+		$mem_used = 0;
+
+		foreach ($resource_list as $arr) {
+			$resource->get_instance($arr['resource_id']);
+
+			if ($resource->id <> 0) {
+				if ($resource->id == $resource->vhostid) {
+					$cpu_avail += intval($resource->cpunumber);
+					$mem_avail += intval($resource->memtotal) - intval($resource->memused);
+				} else {
+					$cpu_used += intval($resource->cpunumber);
+					$mem_used += intval($resource->memtotal);
+				}
+			}
+		}
+
+		$d['memavailable'] = $mem_avail;
+		$d['memconsumed'] = $mem_used;
+		$d['cpuavailable'] = $cpu_avail;
+		$d['cpuconsumed'] = $cpu_used;
+		/* end get number of cpu used and number of cpu available */
+
 		$resource->get_instance_by_id(0);
 			
 			$deployment = new deployment();
@@ -568,6 +610,8 @@ $d = array();
 			$cpumodel = str_replace('QEMU', 'OCH', $resource->cpumodel);
 			
 			$d['cpu'] = $cpumodel;
+			$d['cpunumber'] = $resource->cpunumber;
+			$d['cpuload'] = $resource->load;
  			$d['memtotal'] = $resource->memtotal;
  			$d['memused'] = $resource->memused;
  			$d['swaptotal'] = $resource->swaptotal;
@@ -1067,10 +1111,8 @@ function calculationesxsummary($rezdata) {
 			$counted[] = $host;
 
 			$percent = $used/($capacity/100);
-			//var_dump($percent); die();
+			
 			$percent = round($percent);
-
-			//var_dump($percent); die();
 
 			$used = round($used, 2);
 			
@@ -1159,7 +1201,6 @@ $importcnt = 0;
 foreach ($hostsid as $hoste) {
 		$imported = 0;
 		$appliance_id = $hoste["appliance_id"];
-		//var_dump($appliance_id); die();
 		$virtualization	= new virtualization();
 		$appliance		= new appliance();
 		$resource		= new resource();
@@ -1223,7 +1264,6 @@ foreach ($hostsid as $hoste) {
 			#$a->handler = 'onclick="wait();"';
 			#$a->href    = $this->response->get_url($this->actions_name, "import");
 			#$d['import_existing_vms']   = $a->get_string();
-			//var_dump($resource->ip); die();
 			$body = array();
 			$file = $this->htvcenter->get('webdir').'/plugins/vmware-esx/vmware-esx-stat/'.$resource->ip.'.vm_list';
 			$identifier_disabled = array();
@@ -1498,7 +1538,7 @@ foreach ($hostsid as $hoste) {
 
 		$table = $this->response->html->tablebuilder('events', $this->response->get_array($this->actions_name, 'select'));
 		$table->offset = 0;
-		$table->limit = 100;
+		$table->limit = -1; /* disable the arbitrary $table->limit = 100 */
 		$table->sort = 'event_time';
 		$table->order = 'DESC';
 
@@ -1689,8 +1729,6 @@ foreach ($hostsid as $hoste) {
 		$countwarnings = 0;
 		$counterrors = 0;
 		$allcountwarnings = 0;
-
-		//var_dump(count($allerr)); die();
 
 		foreach ($allerr as $row) {
 		unset($buf);
@@ -2211,11 +2249,27 @@ function storagetaken() {
 	$totalarr = $this->gethumanvalue($total);
 	$usedarr = $this->gethumanvalue($used);
 
-	$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
-	$b['stotal']= $totalarr[0].' '.$totalarr[1];
-	$b['sused']= $usedarr[0].' '.$usedarr[1];;
+	//$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
+	//$b['stotal']= $totalarr[0].' '.$totalarr[1];
+	//$b['sused']= $usedarr[0].' '.$usedarr[1];;
+	$b['sfree'] = $free;
+	$b['stotal'] = $total;
+	$b['sused'] = $used; 
 	$b['spercent'] = $percent;
-	
+	return $b;
+}
+
+function storagefiles() {
+	$lizurl = 'http://'.$_SERVER['SERVER_NAME'].':9425/mfs.cgi?sections=CH';
+	$lizard = file_get_contents($lizurl);
+
+	preg_match_all('/\<p class\=\"text-2x mar-no text-thin\"\>(.+)\<\/p\>/',$lizard,$matches);
+
+	$b['allfiles']			= ($matches[1][0] == '-' ? 0 : $matches[1][0]);
+	$b['healthfiles']		= ($matches[1][1] == '-' ? 0 : $matches[1][1]);
+	$b['endangeredfiles']	= ($matches[1][2] == '-' ? 0 : $matches[1][2]);
+	$b['missingfiles']		= ($matches[1][3] == '-' ? 0 : $matches[1][3]);
+
 	return $b;
 }
 
@@ -2242,9 +2296,51 @@ function gethumanvalue($size) {
 
 
 
+function gethosts() {
+	$virtualization = new virtualization();
+	$virtlist = $virtualization->get_list();
+	$resource = new resource();
+	$hosts = array();
+	$rtrn = array();
 
+	foreach ($virtlist as $idx => $v) {
+		if (strrpos($v['label'],' Host') !== false) {
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			array_push($hosts, [str_replace("KVM","OCH",$v['label']),count($res_ids)]);
+		}
+	}
+	$rtrn['hosts'] = json_encode($hosts);
+	return $rtrn;
+}
 
+function getvms() {
+	$virtualization = new virtualization();
+	$virtlist = $virtualization->get_list();
+	$resource = new resource();
+	$vms = array();
+	$arr = array();
+	$rtrn = array();
 
+	foreach ($virtlist as $idx => $v) {
+		if (strrpos($v['label'],' VM') !== false) {
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			$label = str_replace("KVM","OCH",explode(" (",$v['label'])[0]);
+
+			if (isset($vms[$label])) {
+				$vms[$label] += count($res_ids);
+			} else {
+				$vms[$label] = count($res_ids);
+			}
+		}
+	}
+
+	foreach ($vms as $i => $v) {
+		array_push($arr, [$i, $v]);
+	}
+
+	$rtrn['vms'] = json_encode($arr);
+	return $rtrn;
+}
 
 }
 ?>

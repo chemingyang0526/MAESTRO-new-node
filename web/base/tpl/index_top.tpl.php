@@ -1,10 +1,10 @@
 
 			<script>
-				//if (typeof(calendarevents) != 'undefined') {
+				if (typeof(calendarevents) != 'undefined') {
 					var eventsarr = {calendarevents};
 					var todaydate = '{todaydate}';
 					$('#demo-set-btn').hide();
-				//}
+				}
 			</script>
 
 			<span id="storageidvolvol">{storageidvolvol}</span>

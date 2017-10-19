@@ -380,6 +380,8 @@ var $lang = array(
 		$this->response = $response;
 		$this->file     = $this->htvcenter->file();
 		$this->lang     = $this->user->translate($this->lang, $this->rootdir."/server/appliance/lang", 'appliance.ini');
+		require_once $this->rootdir."/include/htvcenter-database-functions.php";
+		$this->db 				= htvcenter_get_db_connection();
 		
 		//Processing Instances from AWS
 		if(isset($_GET['awsec2'])){
@@ -462,6 +464,57 @@ var $lang = array(
 			die();
 		}
 		
+		//Processing Composed Servers
+		if(isset($_GET['compose'])){
+			$dbSql = $this->db->GetAll("SELECT * FROM `maestro_compose`");
+
+			$div_html = '';
+			$row_headers = array('ID', 'Compose Name', 'Type', 'Total Memory', 'CPU', 'Hosts', 'Status', '...');
+			$div_html = '<table class="table table-hover nowrap dataTable dtr-inline" id="maestro_composed_table" role="grid" style="width: 100%;"><thead><tr>';
+			foreach ($row_headers as $head) {
+				$div_html .= '<th>'.$head.'</th>';
+			}
+
+			$div_html .= '</tr></thead><tbody>';
+			for ($i = 0; $i < count($dbSql); $i++) {
+		
+				$appTemp = explode(",", $dbSql[$i]['compose_appliances']);
+				$appName = "";
+				$count = 1;
+				foreach($appTemp as $app){
+					if(count($appTemp) == $count){
+						$appName = $appName . $this->getApplianceName($app);
+					} else {
+						$appName = $appName . $this->getApplianceName($app) . "<br /> ";
+					}
+					$count++;
+				}
+		
+				$memInGB = ($dbSql[$i]['compose_memory'] / 1024);
+				$memInGB = number_format((float) $memInGB, 2, '.', '');
+				$composeStatus = "";
+				if($dbSql[$i]['compose_status'] == 1) {
+					$composeStatus = '<div class="compose-status compose-active">active</div>';
+				} else {
+					$composeStatus = '<div class="compose-status compose-inactive">inactive</div>';
+				}
+		
+				$div_html .= '<tr class="hoverbg" id="' . $i . '">';
+				$div_html .= '<td>' . $dbSql[$i]['id'] . '</td>';
+				$div_html .= '<td>' . $dbSql[$i]['compose_name'] . '</td>';
+				$div_html .= '<td>' .  $dbSql[$i]['compose_type'] . '</td>';
+				$div_html .= '<td>' .  $memInGB . ' GB</td>';
+				$div_html .= '<td>' .  $dbSql[$i]['compose_cpu'] . '</td>';
+				$div_html .= '<td>' .  $appName . '</td>';
+				$div_html .= '<td>' .  $composeStatus . '</td>';
+				$div_html .= '<td class="toggle-graph" row-id="' . $i . '"><a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+				$div_html .= '</tr>'; 
+			}
+			$div_html .=	'</tbody></table>';
+			echo $div_html;
+			die();
+		}
+		
 		if( isset($_GET['cpuload']) ){
 			$cpuload = array();
 			$appliance = new appliance();
@@ -477,6 +530,11 @@ var $lang = array(
 			die();
 		}
 		
+	}
+
+	function getApplianceName($id){
+		$appSql = $this->db->GetAll("SELECT resource_hostname FROM resource_info WHERE resource_id=".$id);
+		return $appSql[0]['resource_hostname'];
 	}
 
 	//--------------------------------------------

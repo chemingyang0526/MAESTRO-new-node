@@ -121,7 +121,9 @@ var $lang = array();
 			if(empty($data)) {
 				$response->msg = sprintf("Volume not created");
 			} else {
-				$response->msg = sprintf("Volume created successfully");
+				foreach($data as $d){
+					$response->msg = sprintf($d);
+				}
 			}
 		}
 		return $response;

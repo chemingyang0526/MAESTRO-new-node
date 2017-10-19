@@ -81,7 +81,7 @@ if [ -f /etc/debian_version ]; then
 	apt-get install -y nfs-kernel-server
 	apt-get install -y sshpass
 
-	apt-get install -y lizardfs-master lizardfs-chunkserver lizardfs-client lizardfs-adm lizardfs-cgi lizardfs-metalogger lizardfs-common
+	apt-get install -y lizardfs-master=3.10.6 lizardfs-chunkserver=3.10.6 lizardfs-client=3.10.6 lizardfs-adm=3.10.6 lizardfs-cgi=3.10.6 lizardfs-metalogger=3.10.6 lizardfs-common=3.10.6
 
 	cp -r /etc/mfs/mfsexports.cfg.dist /etc/mfs/mfsexports.cfg
 	cp -r /etc/mfs/mfschunkserver.cfg.dist /etc/mfs/mfschunkserver.cfg

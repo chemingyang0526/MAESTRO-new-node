@@ -406,7 +406,7 @@ var $lang = array();
 			array("value" => 50, "text" => 50),
 			array("value" => 100, "text" => 100),
 		);
-
+		
 		$d['form']   = $this->response->get_form($this->actions_name, 'select', false)->get_elements();
 		$d['add']    = $add->get_string();
 		$d['resource_type_filter'] = $box1->get_string();

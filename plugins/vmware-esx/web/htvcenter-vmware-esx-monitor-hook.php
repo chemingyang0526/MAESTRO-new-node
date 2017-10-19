@@ -92,7 +92,9 @@ function htvcenter_vmware_esx_monitor() {
 							$esx_cpu_physical_mem = $line[3];
 							$esx_cpu_used_mem = $line[4];
 							$esx_cpu_network_cards = $line[5];
+							$esx_cpu_qtd = $line[6];
 							$esx_resource_fields["resource_hostname"]=$esx_hostname;
+							$esx_resource_fields["resource_cpunumber"]=$esx_cpu_qtd;
 							$esx_resource_fields["resource_cpuspeed"]=$esx_cpu_speed;
 							$esx_resource_fields["resource_load"]=$esx_cpu_load;
 							$esx_resource_fields["resource_memtotal"]=$esx_cpu_physical_mem;
@@ -108,6 +110,7 @@ function htvcenter_vmware_esx_monitor() {
 							unset($esx_cpu_used_mem);
 							unset($esx_cpu_network_cards);
 							unset($esx_resource_fields);
+							unset($esx_cpu_qtd);
 						} else {
 							// vm infos
 							$vm_name = $line[0];

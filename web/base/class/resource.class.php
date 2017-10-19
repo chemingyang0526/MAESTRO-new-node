@@ -189,7 +189,14 @@ function get_instance_id_by_hostname($resource_hostname) {
 	return $this;
 }
 
-
+function get_instance_ids_by_virtualization_id($virtualization_id) {
+	global $RESOURCE_INFO_TABLE;
+	global $event;
+	$db=htvcenter_get_db_connection();
+	$query = "select resource_id from ".$RESOURCE_INFO_TABLE." where resource_vtype=".$virtualization_id;
+	$resource_array = $db->GetAll($query);
+	return $resource_array;
+}
 
 
 // ---------------------------------------------------------------------------------

@@ -20,8 +20,8 @@
 #	Target
 .|Datacenter
 .|Dashboard|index.php?base=aa_server&controller=datacenter|Datacenter Dashboard
+.|Compose|index.php?base=aa_server&controller=compose|Compose Virtual Machines
 .|Server|index.php?base=appliance|List of Server
-#.|Clouds|index.php?base=cloud&cloud_action=cloudmenu|Maestro Multi-cloud
 #.|Components
 #..|Images|index.php?base=image|List of server images
 #..|Kernels|index.php?base=kernel|List of OS kernels

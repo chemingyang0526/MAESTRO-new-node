@@ -1979,6 +1979,9 @@ IFS='
 		$ESX_HOST_BROWSE_COMMAND > $ESX_HOST_DETAILS
 IFS='
 '
+		ESX_HOST_CPU_COMMAND="$htvcenter_SERVER_BASE_DIR/htvcenter/plugins/vmware-esx/bin/htvcenter-vmware-esx-get-cpu"
+		ESX_CPU_QTD=`$ESX_HOST_CPU_COMMAND $VI_SERVER $VI_USERNAME $VI_PASSWORD`
+		
 		for n in `cat $ESX_HOST_DETAILS`; do
 			if echo $n | grep "Host Name" 1>/dev/null; then
 				ESX_HOSTNAME=`echo $n | cut -d':' -f2 | sed -e "s/'//g" | awk '{ print $1 }'`
@@ -2001,16 +2004,17 @@ IFS='
 				ESX_NETWORK_ADAPTER=`echo $n | cut -d':' -f2 | awk '{ print $1 }'`
 			fi
 
-			if [ "$ESX_HOSTNAME" == "" ] || [ "$ESX_CPU_SPEED" == "" ] || [ "$ESX_CPU_USAGE" == "" ] || [ "$ESX_PHYSICAL_MEMORY" == "" ] || [ "$ESX_USED_MEMORY" == "" ] || [ "$ESX_NETWORK_ADAPTER" == "" ]; then
+			if [ "$ESX_CPU_QTD" == "" ] || [ "$ESX_HOSTNAME" == "" ] || [ "$ESX_CPU_SPEED" == "" ] || [ "$ESX_CPU_USAGE" == "" ] || [ "$ESX_PHYSICAL_MEMORY" == "" ] || [ "$ESX_USED_MEMORY" == "" ] || [ "$ESX_NETWORK_ADAPTER" == "" ]; then
 				continue
 			fi
-			echo "$ESX_HOSTNAME@$ESX_CPU_SPEED@$ESX_CPU_USAGE@$ESX_PHYSICAL_MEMORY@$ESX_USED_MEMORY@$ESX_NETWORK_ADAPTER" >> $ESX_STATS_TMP
+			echo "$ESX_HOSTNAME@$ESX_CPU_SPEED@$ESX_CPU_USAGE@$ESX_PHYSICAL_MEMORY@$ESX_USED_MEMORY@$ESX_NETWORK_ADAPTER@$ESX_CPU_QTD" >> $ESX_STATS_TMP
 			unset ESX_HOSTNAME
 			unset ESX_CPU_SPEED
 			unset ESX_CPU_USAGE
 			unset ESX_PHYSICAL_MEMORY
 			unset ESX_USED_MEMORY
 			unset ESX_NETWORK_ADAPTER
+			unset ESX_CPU_QTD
 		done
 		IFS="$ORG_IFS"
 		# get the vm status

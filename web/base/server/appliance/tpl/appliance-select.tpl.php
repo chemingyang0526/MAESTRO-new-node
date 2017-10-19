@@ -19,7 +19,6 @@
 <link href="/cloud-fortis/css/vender/bootstrap/css/card.css" rel="stylesheet" type="text/css">
 <link href="/cloud-fortis/designplugins/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js" type="text/javascript"></script>
-
 <style>
 	#project_tab_ui { display: none; }
 	table.dataTable .thead-default th { background-color: rgb(255,255,255); }
@@ -202,6 +201,7 @@ $(document).ready(function() {
 	}
 
 	var dt = $("#cloud_appliances_table").DataTable( {
+		"stateSave": true,
 		"columns": [
 				{ "visible": false },
 				null, null, null, null, null, null, null, null,
@@ -250,16 +250,14 @@ $(document).ready(function() {
 		})
 		.done(function(d) {
 			var cpuLoad = jQuery.parseJSON(d);
-			//alert(cpuLoad);
 			var count = 0;
 			var table = $('#cloud_appliances_table').DataTable();
 			table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
-			   var data = this.data();
-			   data[7] = cpuLoad[data[0]];
-			   //data[9] = d[9];
-			   this.data(data).draw();
-			   count = count + 1;
-			} );
+				var data = this.data();
+				data[7] = cpuLoad[data[0]];
+				this.data(data).draw();
+				count = count + 1;
+			});
 		})
 		.fail(function() {
 			alert("Failed to load");
@@ -394,7 +392,7 @@ $(document).ready(function() {
 		$('#storageform').load(url+" form", function(){
 			$('#storageform select').selectpicker();
 			$('#storageform select').hide();
-			$('#storageform form.form-horizontal').remove(); // mar-top
+			$('#storageform form.form-horizontal').remove();
 			$('#storageform .selectpicker')
 			$('#volumepopup').show();
 		});
@@ -439,7 +437,6 @@ $(document).ready(function() {
 	}
 	
 	$('#load-aws-instance').click(function(e){
-		//aws-resources-instance $("#aws-resources-instance").html('<p id="load-aws-instance"><i class="fa fa-spinner fa-lg" aria-hidden="true"></i> loading</p>');
 		$.ajax({
 		  url: 'index.php?base=appliance&awsec2=list',
 		})
@@ -457,7 +454,7 @@ $(document).ready(function() {
 						content: function() {
 							var tr = $(this).closest('tr');
 							var row = aws_dt.row( tr );
-							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+							return formatAWSPopOver(row.data());
 						}
 					});
 				}
@@ -487,7 +484,7 @@ $(document).ready(function() {
 						content: function() {
 							var tr = $(this).closest('tr');
 							var row = azure_dt.row( tr );
-							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+							return formatAWSPopOver(row.data());
 						}
 					});
 				}
@@ -516,7 +513,7 @@ $(document).ready(function() {
 						content: function() {
 							var tr = $(this).closest('tr');
 							var row = azure_dt.row( tr );
-							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+							return formatAWSPopOver(row.data());
 						}
 					});
 				}
@@ -528,4 +525,41 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	function formatComposedPopOver (d) {
+		var composeID = $(d[0]).text();
+		var onclickHtml = '<ul class="compose-pop-over-menu">';
+		onclickHtml = onclickHtml + '<li class="fa fa-edit"><a href="index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+d[0]+'"> Edit</a></li>';
+		onclickHtml = onclickHtml + '</ul>';
+		return onclickHtml;
+	}
+	
+	if($('#load-composed-server').length){
+		$.ajax({
+		  url: 'index.php?base=appliance&compose=list',
+		})
+		.done(function(data) {
+			$("#composed-servers").html(data);
+			var composed_servers = $("#maestro_composed_table").DataTable( {
+				"columns": [
+					{ "visible": false },
+					null, null, null, null, null, null, null,
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
+				"drawCallback": function( oSettings ) {
+					$(".toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = composed_servers.row( tr );
+							return formatComposedPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load Composed Servers");
+		});
+	}
 </script>
