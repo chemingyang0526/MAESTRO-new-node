@@ -242,6 +242,16 @@ var $lang = array(
 			}
 			echo json_encode($pluginArray); die();
 		}
+		
+		if(isset($_GET['checkuname'])) {
+			$dbSql = $this->db->GetAll("SELECT * FROM `maestro_compose` WHERE compose_name = '".trim($_GET['checkuname'])."'");
+			if (count($dbSql) > 0 ){
+				echo false;
+			} else {
+				echo true;
+			}
+			die();
+		}
 	}
 
 	//--------------------------------------------
@@ -276,8 +286,10 @@ var $lang = array(
 				$content[] = $this->compose(false);
 				$content[] = $this->editcompose(true);
 			break;
-
-			
+			case 'deletecompose':
+				$content[] = $this->compose(false);
+				$content[] = $this->deletecompose(true);
+			break;
 		}
 
 		$tab = $this->response->html->tabmenu($this->prefix_tab);
@@ -369,7 +381,30 @@ var $lang = array(
 		return $content;
 	}
 
-
+	//--------------------------------------------
+	/**
+	 * Delete entry
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	function deletecompose( $hidden = true ) {
+		$id = $_GET['composeID'];
+		$dbSql = $this->db->Execute("DELETE FROM `maestro_compose` WHERE id = " . $id);
+		
+		if($dbSql) {
+			$response->msg = sprintf("Compose Server deleted successfully");
+		} else {
+			$response->msg = sprintf("Failed to delete compose server");
+		}
+		if(isset($response->msg)) {
+			$this->response->redirect(
+				$this->response->get_url('', '', $this->message_param, $response->msg)
+			);
+		}
+	}
 
 }
 ?>

@@ -535,18 +535,25 @@ div#storageformvmf form#app-stop-form div#form div#buttons .submit {
 	right: 15% !important;
 }
 
-td.active span, td.vmactive span {
+td.active span, td.vmactive span, .compose-active {
 	background-color: #8cc63f;
 	border-radius: 8px;
 	color: #fff;
 	padding: 1px 5px;
 }
 
-td.inactive span, td.no-res span {
+td.inactive span, td.no-res span, .compose-inactive {
 	background-color: #ff5800;
 	border-radius: 8px;
 	color: #fff;
 	padding: 1px 5px;
+}
+
+div.compose-status {
+	text-align: center;
+	padding: 3px 5px;
+	width: 45px;
+	border-radius: 10px;
 }
 
 td.vmstopped span {
@@ -554,4 +561,9 @@ td.vmstopped span {
 	border-radius: 8px;
 	color: #fff;
 	padding: 1px 5px;
+}
+
+ul.compose-pop-over-menu {
+	margin: 0;
+	padding: 0;
 }

@@ -393,7 +393,7 @@ $(document).ready(function() {
 					},
 					onFinishing: function (event, currentIndex)
 					{
-						form.validate().settings.ignore = ":disabled";
+						form.validate().settings.ignore = ":disabled,:hidden";
 
 						$('<input />')
 							.attr('type', 'hidden')

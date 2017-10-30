@@ -167,6 +167,7 @@ form#composeform {
 .visa3{background-image:url(/htvcenter/base/img/vsphere.png);}
 .mastercard{background-image:url(/htvcenter/base/img/physical_server.png);}
 .mastercard2{background-image:url(/htvcenter/base/img/htbaselogo.png);}
+.mastercard02{background-image:url(/htvcenter/base/img/physical_server.png);}
 .aws{background-image:url(/htvcenter/base/img/aws_cloud.png);}
 .azure{background-image:url(/htvcenter/base/img/azure_cloud.png);}
 
@@ -318,6 +319,11 @@ div#composed-servers div#buttons {
 
 ul.compose-pop-over-menu {
 	padding: 0;
+}
+
+ul.compose-pop-over-menu li{
+	width: 100%;
+	margin:3px 0;
 }
 
 div.available-hosts {

@@ -529,8 +529,18 @@ $(document).ready(function() {
 		var composeID = $(d[0]).text();
 		var onclickHtml = '<ul class="compose-pop-over-menu">';
 		onclickHtml = onclickHtml + '<li class="fa fa-edit"><a href="index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+d[0]+'"> Edit</a></li>';
+		onclickHtml = onclickHtml + '<li class="fa fa-trash-o"><a onclick="return confirm(\'Are you sure you want to delete this compose?\');" href="index.php?base=aa_server&controller=compose&compose_action=deletecompose&composeID='+d[0]+'"> Delete</a></li>';
 		onclickHtml = onclickHtml + '</ul>';
 		return onclickHtml;
+	}
+	
+	function formatComposeHost(d) {
+		var host = d[8];
+		if (host != "") {
+			return host;
+		} else {
+			return "Did not find information";
+		}
 	}
 	
 	if($('#load-composed-server').length){
@@ -542,7 +552,7 @@ $(document).ready(function() {
 			var composed_servers = $("#maestro_composed_table").DataTable( {
 				"columns": [
 					{ "visible": false },
-					null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 				"drawCallback": function( oSettings ) {
@@ -553,6 +563,15 @@ $(document).ready(function() {
 							var tr = $(this).closest('tr');
 							var row = composed_servers.row( tr );
 							return formatComposedPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+					$(".toggle-host a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = composed_servers.row( tr );
+							return formatComposeHost(row.data()); //$('#popover-content').html();
 						}
 					});
 				}

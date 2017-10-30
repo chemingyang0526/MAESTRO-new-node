@@ -104,7 +104,7 @@ function action() {
 		$count = 1;
 		$memInGB = $dbSql[$i]['compose_memory'];
 		
-		if($comp_type[0] == "cloud") {
+		/*if($comp_type[0] == "cloud") {
 			$appName = $comp_type[1];
 		} else {
 			foreach($appTemp as $app){
@@ -115,7 +115,9 @@ function action() {
 				}
 				$count++;
 			}
-		}
+		}*/
+		
+		$appName = $comp_type[1];
 		
 		$composeStatus = "";
 		if($dbSql[$i]['compose_status'] == 1) {
@@ -128,7 +130,7 @@ function action() {
 		$div_html .= '<td>' . $dbSql[$i]['id'] . '</td>';
 		$div_html .= '<td>' . $dbSql[$i]['compose_name'] . '</td>';
 		$div_html .= '<td>' .  ucwords($comp_type[0]) . '</td>';
-		$div_html .= '<td>' .  $memInGB . ' GB</td>';
+		$div_html .= '<td>' .  $this->gbtoTBConversion($memInGB) . '</td>';
 		$div_html .= '<td>' .  $dbSql[$i]['compose_cpu'] . '</td>';
 		$div_html .= '<td>' .  $appName . '</td>';
 		$div_html .= '<td>' .  $composeStatus . '</td>';
@@ -149,6 +151,18 @@ function getApplianceName($id){
 function get_response($mode = '') {
 	$response = $this->response;
 	return $response;
+}
+
+function gbtoTBConversion($bytes, $precision = 2) {
+	$gigabyte = 1024;
+	$terabyte = $gigabyte * 1024;
+	if (($bytes >= 0) && ($bytes < $gigabyte)) {
+		return $bytes . ' GiB';
+	} elseif (($bytes >= $gigabyte) && ($bytes < $terabyte)) {
+		return round($bytes / $gigabyte, $precision) . ' TiB';
+	} else {
+		return $bytes . ' B';
+	}
 }
 
 }

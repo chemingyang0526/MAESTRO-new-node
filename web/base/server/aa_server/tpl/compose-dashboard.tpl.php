@@ -34,6 +34,43 @@
 	</div>
 </div>
 
+<!-- Edit Popup -->
+
+<div id="volumepopup" class="modal-dialog">
+	<div class="panel">
+		<!-- Classic Form Wizard -->
+		<!--===================================================-->
+		<div id="demo-cls-wz">
+			<!--Nav-->
+			<ul class="wz-nav-off wz-icon-inline wz-classic">
+				<li class="col-xs-3 bg-info active">
+					<a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true"><span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-music"></i></span> Edit Compose</a>
+				</li>
+				<div class="volumepopupclass"><a id="volumepopupclose"><i class="fa fa-icon fa-close"></i></a></div>
+			</ul>
+			
+			<!--Progress bar-->
+			<div class="progress progress-sm progress-striped active">
+				<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+			</div>
+			
+			<!--Form-->
+			<div class="form-horizontal mar-top">
+				<div class="panel-body">
+					<div class="tab-content">
+						<!--First tab-->
+						<div class="tab-pane active in" id="demo-cls-tab1">
+							<div id="storageform"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===================================================-->
+		<!-- End Classic Form Wizard -->
+	</div>
+</div>
+
 <!-- Modal -->
 <div id="composeModal" class="modal" role="dialog">
 	<div class="modal-dialog">
@@ -58,7 +95,7 @@
 						<fieldset>
 							<div class="form-group">
 								<label class="col-lg-2 control-label" for="uname">Compose Name: </label> <br />
-								<div class="col-lg-6">
+								<div class="col-lg-6 compose-name">
 									<input type="text" placeholder="Your Name" id="uname" name="uname" class="form-control compose-name" autocomplete="off">
 								</div>
 							</div>
@@ -171,6 +208,40 @@
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+function showPopup(id){
+	var editLink = 'index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+id;
+	$('#storageformaddn').load(editLink+" #composed-servers", function(){
+		$('.lead').hide();
+		$('#storageformaddn select').selectpicker();
+		$('#storageformaddn select').hide();
+		var heder = $('#appliance_tab0').find('h2').text();
+		if (heder == 'ServerAdd a new Server') {
+			$('#storageformaddn').find('#name').css('left','-20px');
+		}
+		$('#storageformaddn').find('#info').remove();
+		$('#demo-cls-wz ul.wz-classic li.bg-info').html('<a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true"><span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-music"></i></span> Edit Compose</a>');
+		$('#volumepopupaddn').show();
+	});
+	event.preventDefault();
+}	
+
+function ajax_filter () {
+	var value = $("#ajax_host_filter").val();
+	value = value.toLowerCase();
+	$(".available-hosts div.htmlobject_box").each(function () {
+		if (value == ""){
+			$(this).show();
+		} else {
+			var label_value = $(this).text();
+			if (label_value.indexOf(value) >= 0 ){
+				$(this).show();
+			} else {
+				$(this).hide();
+			}
+		}
+	});
+}
+
 $('.modal').on('hidden.bs.modal', function(){
 	$(this).find('form')[0].reset();
 });
@@ -184,7 +255,7 @@ function serverlists(type, profile) {
 		if (serverList.length > 0) {
 			var count = 1;
 			var htmlTable = '<div class="servers-to-compose"><table class="table table-hover">';
-			htmlTable = htmlTable + '<tr><th>Host Name</th><th>Memory</th><th>CPU</th></tr>';
+			htmlTable = htmlTable + '<tr><th>Host Name</th><th>Memory (GiB)</th><th>CPU</th></tr>';
 			for (var i = 0 ; i < serverList.length ; i++){
 				htmlTable = htmlTable + '<tr><td><input name="appliance[]" class="form-control check-required required" id="box'+count+'" type="checkbox" value="'+serverList[i]['resource_id']+' - '+serverList[i]['resource_cpunumber']+' - '+ serverList[i]['resource_memtotal'] +'" /><label for="box'+count+'">'+serverList[i]['resource_hostname']+'</label></td>';
 				htmlTable = htmlTable + '<td>'+serverList[i]['resource_memtotal']+'</td><td>'+serverList[i]['resource_cpunumber']+'</td></tr>';
@@ -201,11 +272,26 @@ function serverlists(type, profile) {
 	});
 }
 
+function composeNameExists (composeName) {
+	var succeed = false;
+	$.ajax({
+		async: false,
+		url: 'index.php?base=aa_server&controller=compose&checkuname='+composeName,
+		success: function(d) {
+			if (d == true)
+				succeed = true;
+			else
+				succeed = false;
+		}
+	});
+	return succeed;
+}
+
 jQuery().ready(function() {
 	var v = jQuery("#composeform").validate({
 		rules: {
 			uname: {
-				required: true
+				required: true,
 			}
 		},
 		errorElement: "span",
@@ -226,7 +312,15 @@ jQuery().ready(function() {
 		'<label class="drinkcard-cc visa" for="visa2">VMware&nbsp;Host</label></div>';
 		
 	$(".open1").click(function() {
-		if (v.form()) {
+		var composeName = $("#uname").val();
+		var cExists = composeNameExists(composeName);
+		if(!cExists) {
+			$('#sf1 .compose-name .has-error').remove();
+			$("#sf1 .compose-name").append('<span class="has-error">Compose name is already in use.</span>');
+			return false;
+		}
+		
+		if (v.form() && cExists) {
 			$(".frm").hide();
 			$("#sf2").show();
 			$(".profile").removeClass('active');
@@ -246,6 +340,10 @@ jQuery().ready(function() {
 					var pluginList = jQuery.parseJSON(d);
 					if (pluginList.length > 0) {
 						var htmlTable = '<div class="cc-selector-2">';
+						
+						htmlTable = htmlTable + '<input id="mastercard02" type="radio" name="creditcard" value="physical" />' +
+						'<label class="drinkcard-cc mastercard02" for="mastercard02">Physical&nbsp;Host</label>';
+						
 						if (pluginList.indexOf('OCH') >= 0) {
 							htmlTable = htmlTable + '<input checked="checked" id="mastercard22" type="radio" name="creditcard" value="och" />' +
 							'<label class="drinkcard-cc mastercard2" for="mastercard22">OCH&nbsp;Host</label>';
@@ -311,13 +409,17 @@ jQuery().ready(function() {
 
 	$(".open3").click(function() {
 		var atLeastOneIsChecked = false;
+		var count = 0;
 		$('.check-required').each(function () {
 			if ($(this).is(':checked')) {
-				atLeastOneIsChecked = true;
-				return false;
+				count = count + 1;
+				if (count > 1) {
+					atLeastOneIsChecked = true;
+					return false;
+				}
 			}
 		});
-		if (atLeastOneIsChecked){
+		if (atLeastOneIsChecked) {
 			if (v.form()) {
 				$(".frm").hide();
 				$("#sf4").show();
@@ -336,7 +438,7 @@ jQuery().ready(function() {
 				$('.check-required').each(function () {
 					if ($(this).is(':checked')) {
 						var temp = $(this).val();
-						totalMemory = totalMemory + parseInt (temp.split(" - ")[2] );
+						totalMemory = totalMemory + parseFloat (temp.split(" - ")[2] );
 						totalCPU = totalCPU + parseInt (temp.split(" - ")[1] );
 					}
 				});
@@ -345,7 +447,7 @@ jQuery().ready(function() {
 			}
 		} else {
 			$('.has-error').remove();
-			$("#sf3 .col-lg-6").append('<span class="has-error">Check at least one host to proceed.</span>');
+			$("#sf3 .col-lg-6").append('<span class="has-error">Check at least two hosts to proceed.</span>');
 			return false;
 		}
 	});
@@ -370,7 +472,7 @@ jQuery().ready(function() {
 				url: 'index.php?base=aa_server&controller=compose&dbinsert=1&maestroComposeName='+maestroComposeName+'&maestroComposeType='+maestroComposeType+'&composeTotalMemory='+composeTotalMemory+'&composeTotalCpu='+composeTotalCpu+'&applianceID='+applianceID,
 			}).done(function(d) {
 				var composeProperties = jQuery.parseJSON(d);
-				$("#composeform").html('<h2>Thank you :) '+maestroComposeName+' has been created.</h2>');
+				$("#composeform").html('<br /><h2>'+maestroComposeName+' has been created.</h2><br />');
 			}).fail(function() {
 				alert("Failed to load");
 			});
@@ -410,8 +512,8 @@ jQuery().ready(function() {
 	function formatPopOver (d) {
 		var composeID = $(d[0]).text();
 		var onclickHtml = '<ul class="compose-pop-over-menu">';
-		onclickHtml = onclickHtml + '<li class="fa fa-edit"><a href="index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+d[0]+'"> Edit</a></li>';
-		//onclickHtml = onclickHtml + '<li class="fa fa-refresh"> Delete</li>';
+		onclickHtml = onclickHtml + '<li class="fa fa-edit"><a onclick="showPopup('+d[0]+');" href="index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+d[0]+'"> Edit</a></li>';
+		onclickHtml = onclickHtml + '<li class="fa fa-trash-o"><a onclick="return confirm(\'Are you sure you want to delete this compose?\');" href="index.php?base=aa_server&controller=compose&compose_action=deletecompose&composeID='+d[0]+'"> Delete</a></li>';
 		onclickHtml = onclickHtml + '</ul>';
 		return onclickHtml;
 	}
@@ -429,7 +531,7 @@ jQuery().ready(function() {
 				content: function() {
 					var tr = $(this).closest('tr');
 					var row = dt.row( tr );
-					return formatPopOver(row.data()); //$('#popover-content').html();
+					return formatPopOver(row.data());
 				}
 			});
 		}

@@ -185,6 +185,9 @@ var $lang = array();
 		$data = $this->getvms();
 		$t->add($data);
 
+		$data = $this->getnetworkips();
+		$t->add($data);
+
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -2294,7 +2297,28 @@ function gethumanvalue($size) {
 
 }
 
+function getnetworkips() {
+	$file = $this->htvcenter->get('webdir')."/plugins/ip-mgmt/class/ip-mgmt.class.php";
+	require_once $file;
+	$this->ip_mgmt = new ip_mgmt();
+	$networks = $this->ip_mgmt->get_list();
+	$network_apps = array();
 
+	foreach ($networks as $name => $v) {
+		$ids = $this->ip_mgmt->get_ips_by_name($name);
+
+		foreach($ids as $k => $id) {
+			$data = $this->ip_mgmt->get_instance('id', $id);
+			$network_apps[$data['ip_mgmt_address']] = $data['ip_mgmt_appliance_id'];
+		}
+	}
+
+	$total = count($network_apps);
+	$used  = count(array_filter($network_apps));
+	$free = $total - $used;
+	$rtrn['networkips'] = json_encode([['total',$total],['used',$used],['free',$free]]);
+	return $rtrn;
+}
 
 function gethosts() {
 	$virtualization = new virtualization();
@@ -2302,13 +2326,16 @@ function gethosts() {
 	$resource = new resource();
 	$hosts = array();
 	$rtrn = array();
+	$total_count = 0;
 
 	foreach ($virtlist as $idx => $v) {
 		if (strrpos($v['label'],' Host') !== false) {
 			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			$total_count += count($res_ids);
 			array_push($hosts, [str_replace("KVM","OCH",$v['label']),count($res_ids)]);
 		}
 	}
+	array_unshift($hosts, ['total',$total_count]);
 	$rtrn['hosts'] = json_encode($hosts);
 	return $rtrn;
 }

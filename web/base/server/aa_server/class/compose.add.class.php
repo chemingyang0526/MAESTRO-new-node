@@ -160,6 +160,8 @@ function add() {
 				}
 			} else {
 				$mem_total = $mem_total + $this->getResourceMemory($appName);
+				$mem_total = ($mem_total / 1024);
+				$mem_total = number_format((float) $mem_total, 2, '.', '');
 				$cpuTotal = $cpuTotal + $this->getResourceCPU($appName);
 			}
 			$count++;

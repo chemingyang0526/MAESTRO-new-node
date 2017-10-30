@@ -474,13 +474,17 @@ var $lang = array(
 			foreach ($row_headers as $head) {
 				$div_html .= '<th>'.$head.'</th>';
 			}
-
 			$div_html .= '</tr></thead><tbody>';
+			
 			for ($i = 0; $i < count($dbSql); $i++) {
-		
 				$appTemp = explode(",", $dbSql[$i]['compose_appliances']);
 				$appName = "";
 				$count = 1;
+				
+				$composeType = $dbSql[$i]['compose_type'];
+				$platformType = ucwords(explode(",", $composeType)[0]);
+				$hostType = explode(",", $composeType)[1];
+				
 				foreach($appTemp as $app){
 					if(count($appTemp) == $count){
 						$appName = $appName . $this->getApplianceName($app);
@@ -489,7 +493,13 @@ var $lang = array(
 					}
 					$count++;
 				}
-		
+				
+				if($appName) {
+					$app_name = "<b>".$hostType. "</b>" . "<br />".$appName;
+				} else {
+					$app_name = $hostType;
+				}
+					
 				$memInGB = $dbSql[$i]['compose_memory'];
 				//$memInGB = number_format((float) $memInGB, 2, '.', '');
 				$composeStatus = "";
@@ -502,12 +512,13 @@ var $lang = array(
 				$div_html .= '<tr class="hoverbg" id="' . $i . '">';
 				$div_html .= '<td>' . $dbSql[$i]['id'] . '</td>';
 				$div_html .= '<td>' . $dbSql[$i]['compose_name'] . '</td>';
-				$div_html .= '<td>' .  $dbSql[$i]['compose_type'] . '</td>';
-				$div_html .= '<td>' .  $memInGB . ' GB</td>';
-				$div_html .= '<td>' .  $dbSql[$i]['compose_cpu'] . '</td>';
-				$div_html .= '<td>' .  $appName . '</td>';
-				$div_html .= '<td>' .  $composeStatus . '</td>';
+				$div_html .= '<td>' . $platformType . '</td>';
+				$div_html .= '<td>' . $this->gbtoTBConversion($memInGB) . '</td>';
+				$div_html .= '<td>' . $dbSql[$i]['compose_cpu'] . '</td>';
+				$div_html .= '<td class="toggle-host"><a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+				$div_html .= '<td>' . $composeStatus . '</td>';
 				$div_html .= '<td class="toggle-graph" row-id="' . $i . '"><a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a></td>';
+				$div_html .= '<td>' . $app_name . '</td>';
 				$div_html .= '</tr>'; 
 			}
 			$div_html .=	'</tbody></table>';
@@ -529,7 +540,18 @@ var $lang = array(
 			echo json_encode($cpuload);
 			die();
 		}
-		
+	}
+	
+	function gbtoTBConversion($bytes, $precision = 2) {
+		$gigabyte = 1024;
+		$terabyte = $gigabyte * 1024;
+		if (($bytes >= 0) && ($bytes < $gigabyte)) {
+			return $bytes . ' GiB';
+		} elseif (($bytes >= $gigabyte) && ($bytes < $terabyte)) {
+			return round($bytes / $gigabyte, $precision) . ' TiB';
+		} else {
+			return $bytes . ' B';
+		}
 	}
 
 	function getApplianceName($id){
