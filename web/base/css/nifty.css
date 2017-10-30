@@ -4285,7 +4285,7 @@ hr {
   background-color: #f6f8fa;
 }
 #container .table-hover > tbody > tr:hover {
-  background-color: #f0f2f6;
+  background-color: rgb(189,199,231);;
 }
 /* FORM CONTROL  */
 /*======================================*/
@@ -4876,7 +4876,7 @@ a.list-group-item-dark:focus {
   margin-left: -9px;
 }
 .popover-content {
-  padding: 10px 15px 20px;
+  padding: 8px 12px;
 }
 /* BADGE */
 /*======================================*/

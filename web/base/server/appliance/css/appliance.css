@@ -350,12 +350,12 @@ table#cloud_appliances_table tr td.active {
 }
 
 table#cloud_appliances_table tr td.active:hover {
-	background-color: #5591c6;
+	background-color: rgb(189,199,231);
 }
 
 #container table#cloud_appliances_table tbody tr.hoverbg:hover,
 #container table.dataTable tbody tr.hoverbg:hover{
-	background-color: #5591c6;
+	background-color: rgb(189,199,231);
 }
 
 #cloud_appliances_table tr.headrow, #cloud_appliances_table tr.headrow th{
@@ -429,15 +429,21 @@ span.clonera, span.protera, span.remove-server{
 	cursor: pointer;
 }
 
-ul.appliance-pop-over-menu {
+ul.appliance-pop-over-menu, ul.compose-pop-over-menu {
 	margin: 0;
 	padding: 0;
 }
 
-ul.appliance-pop-over-menu li {
+ul.appliance-pop-over-menu li, ul.compose-pop-over-menu li {
+	display: block;
 	list-style-type: none;
 	width: 100%;
-	padding: 0px 0px 10px 0;
+	padding: 10px 8px 10px 8px;
+	border: 1px solid #e4e9f0;
+}
+
+ul.appliance-pop-over-menu li:hover, ul.appliance-pop-over-menu li:hover a, ul.compose-pop-over-menu li:hover, ul.compose-pop-over-menu li:hover a {
+	color: rgb(86,148,213);
 }
 
 .en-app:before{

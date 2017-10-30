@@ -33,3 +33,12 @@
 .event-mailer #Tabelle td.func {
 	text-align: right;
 }
+
+.table>tbody>tr>td.warning, .table>tbody>tr>th.warning {
+	background-color: transparent !important;
+}
+
+.table>tbody>tr>td.active, .table>tbody>tr>th.active {
+	background-color: transparent !important;
+}
+

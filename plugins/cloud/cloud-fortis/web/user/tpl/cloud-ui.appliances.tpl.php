@@ -172,7 +172,7 @@ $(document).ready(function() {
 			async: true,
 			dataType: "html",
 			success : function (data) {
-				$('.popover').popover('hide');
+				// $('.popover').popover('hide');
 				$("#table-appliances").empty().append(data);
 
 					var dt = $("#cloud_appliances").DataTable( {
@@ -697,7 +697,7 @@ $(document).ready(function() {
 		}
 	}
 	loadAppliancesTable();
-	reloadAppliancesTable();
+	// reloadAppliancesTable();
 
 	/* This and function format is for adding an expanded row by clicking on the ... button  
 

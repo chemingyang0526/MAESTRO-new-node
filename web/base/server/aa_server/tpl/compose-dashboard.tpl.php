@@ -21,6 +21,7 @@
 	#compose_tab {
 		display: none;
 	}
+	table.dataTable tbody td { padding-left: 18px !important; padding-right: 18px !important; } /* for aligning with thead */
 </style>
 
 <div id="prenutanix">
@@ -521,7 +522,7 @@ jQuery().ready(function() {
 	var dt = $("#maestro_composed_table").DataTable( {
 		"columns": [
 			{ "visible": false },
-			null, null, null, null, null, null, null,
+			null, null, null, null, null, null, {"orderable": false },
 		],
 		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 		"drawCallback": function( oSettings ) {

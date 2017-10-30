@@ -721,7 +721,7 @@ function get_info_box() {
 	<!-- <script src="{baseurl}/js/interface/interface.js" type="text/javascript"></script> -->
 	<script src="{baseurl}/js/menu.js" type="text/javascript"></script>
 
-	<script src="{baseurl}/js/bootstrap-select.js" type="text/javascript"></script>
+	<!-- <script src="{baseurl}/js/bootstrap-select.js" type="text/javascript"></script> -->
 	<script src="{baseurl}/js/scroll.js"></script>
 	<script src="{baseurl}/js/multiselect.js" type="text/javascript"></script>
 	<script src="{baseurl}/js/jcarousel.min.js"></script>

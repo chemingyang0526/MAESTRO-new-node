@@ -27,7 +27,7 @@
 	table.dataTable tbody td.hide { display: none; } 
 	table.dataTable.table-hover tbody tr:hover { background-color: rgb(189,199,231); }
 
-
+	table.dataTable th.sorting_disabled {text-align: center; }
 	/*table.dataTable tbody tr.even { background-color: rgb(228,233,240); }  */
 	table.dataTable tbody td section.card { margin-bottom: 0; }
 	table.dataTable tbody td.status.active { color: rgb(112,173,71); }
@@ -415,7 +415,7 @@ $(document).ready(function() {
 			$("#aws-resources-instance").html(data);
 			var aws_dt = $("#aws_instance_table").DataTable( {
 				"columns": [
-						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+						{ "visible": false }, null, null, null, null, { "orderable": false }, { "visible": false }, { "visible": false }, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
 				"fnDrawCallback": function( oSettings ) {
@@ -444,7 +444,7 @@ $(document).ready(function() {
 			$("#aws-resources-instance").html(data);
 			var aws_dt = $("#aws_instance_table").DataTable( {
 				"columns": [
-						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+						{ "visible": false }, null, null, null, null, { "orderable": false }, { "visible": false }, { "visible": false }, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
 				"fnDrawCallback": function( oSettings ) {
@@ -474,7 +474,7 @@ $(document).ready(function() {
 			$("#azure-resources-vms").html(data);
 			var azure_dt = $("#azure_vm_table").DataTable( {
 				"columns": [
-						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+						{ "visible": false }, null, null, null, null, { "orderable": false }, { "visible": false }, { "visible": false }, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
 				"fnDrawCallback": function( oSettings ) {
@@ -503,7 +503,7 @@ $(document).ready(function() {
 			$("#azure-resources-vms").html(data);
 			var azure_dt = $("#azure_vm_table").DataTable( {
 				"columns": [
-						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+						{ "visible": false }, null, null, null, null, { "orderable": false }, { "visible": false }, { "visible": false }, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
 				"fnDrawCallback": function( oSettings ) {
@@ -552,7 +552,7 @@ $(document).ready(function() {
 			var composed_servers = $("#maestro_composed_table").DataTable( {
 				"columns": [
 					{ "visible": false },
-					null, null, null, null, null, null, null, { "visible": false },
+					null, null, null, null, null, null, { "orderable": false }, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 				"drawCallback": function( oSettings ) {

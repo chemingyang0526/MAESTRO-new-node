@@ -4320,7 +4320,8 @@ if (notpicker != true) {
 		}
 	});
 }
-//$('.selectpicker').selectpicker();
+
+$('.selectpicker').selectpicker();
 
 
 
