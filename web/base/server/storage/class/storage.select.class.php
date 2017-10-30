@@ -90,7 +90,7 @@ var $lang = array();
 		$t->add($this->lang['lang_filter'], 'lang_filter');
 		$t->add($this->lang['please_wait'], 'please_wait');
 		$t->group_elements(array('param_' => 'form'));
-		$iframeurl = 'http://'.$_SERVER['SERVER_NAME'].':9425/mfs.cgi';
+		$iframeurl = 'http://'.$_SERVER['SERVER_NAME'].':9425/mfs.cgi?masterhost='.$_SERVER['SERVER_NAME'];
 		//var_dump($iframeurl); die();
 		$t->add($iframeurl, 'iframeurl');
 		return $t;
