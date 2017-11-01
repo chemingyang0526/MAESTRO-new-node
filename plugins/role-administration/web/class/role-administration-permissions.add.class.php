@@ -126,7 +126,13 @@ var $lang;
 	 */
 	//--------------------------------------------
 	function add() {
+
+		// die("line 130");
+
 		$response = $this->get_response();
+		
+		// die("134");
+
 		$form = $response->form;
 		if(!$form->get_errors() && $this->response->submit()) {
 			$request = $form->get_request();
@@ -195,9 +201,15 @@ var $lang;
 		$d['name']['object']['attrib']['name'] = 'permission_group_name';
 		$d['name']['object']['attrib']['maxlength'] = 50;
 
+
+
 		$data['plugin'] = $this->permissions->get_plugins();
+		// die("207");
+
 		$data['base']   = $this->permissions->get_base();
 		
+		
+
 		foreach($data as $key => $content) {
 			if(is_array($content) && count($content) > 0) {
 				$i = 0;

@@ -15,10 +15,8 @@
 */
 //-->
 <h2>{label}<span id="add-new-role" class="pull-right">{add}</span></h2>
-
-
+<div class="d-block"><span id="about-role-administration" class="pull-right"><a class="add btn-labeled fa fa-info" title="About Role Administration" href="#" ref="index.php?plugin=role-administration&amp;controller=role-administration-about"><span class="halflings-icon white"><i></i></span>About Role Administration</a></span></div>
 {table}
-
 <script>
 	$('span#add-new-role').click(function(){
 		//e.preventDefault();
@@ -37,4 +35,19 @@
 	$('#volumepopupcloseaddn').click(function(){
 		$('#volumepopupaddn').hide();
 	});
+
+	$('span#about-role-administration').click(function(){
+		var url = $(this).find('a.add').attr('ref');
+		$('table').find("input[type=checkbox]").hide();
+		$('#storageformzmail').load(url+" #role_administration_about_tab0", function(){
+			$('#storageformzmail select').selectpicker();
+			$('#storageformzmail select').hide();
+			$('#storageformzmail .selectpicker')
+			$('.lead').hide();
+			$("#volumepopupzmail").find("ul.wz-classic li a").remove();
+			$("#volumepopupzmail").find("ul.wz-classic li").html("<p>&nbsp;</p><p>&nbsp;</p>");
+			$('#volumepopupzmail').show();
+		});
+		return false;
+	}); 
 </script>

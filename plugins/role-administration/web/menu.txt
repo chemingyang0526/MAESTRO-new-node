@@ -20,4 +20,3 @@
 ..|Role-administration
 ...|Roles|index.php?plugin=role-administration|Configure Roles
 ...|Permissions|index.php?controller=role-administration-permissions&plugin=role-administration|Configure Permissions
-...|About|index.php?plugin=role-administration&controller=role-administration-about|How to use

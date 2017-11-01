@@ -18,11 +18,12 @@
 
 
 -->
-<h2>{label}</h2>
+
 
 <form action="{thisfile}">
 {form}
 <div id="form">
+	<h2 style="margin-left: 15px;">{label}</h2>
 	{vmware_esx_ad_id}
 	{vmw_esx_ad_ip}
 	{vmw_esx_ad_mac}
@@ -32,7 +33,7 @@
 	{vmw_esx_ad_password}
 	{vmw_esx_ad_comment}
 
-<div id="buttons">{submit}&#160;{cancel}</div>
+<div id="buttons" class="pull-left" style="margin-left: 15px;">{submit}&#160;{cancel}</div>
 </div>
 
 </form>

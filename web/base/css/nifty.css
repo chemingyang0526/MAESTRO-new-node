@@ -4284,7 +4284,7 @@ hr {
 #container .table-striped > tbody > tr:nth-child(2n+1) {
   background-color: #f6f8fa;
 }
-#container .table-hover > tbody > tr:hover {
+#container .table-hover > tbody > tr:not(.headrow):hover {
   background-color: rgb(189,199,231);;
 }
 /* FORM CONTROL  */

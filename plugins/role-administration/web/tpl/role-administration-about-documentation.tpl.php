@@ -14,21 +14,22 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
 */
 //-->
-<h2>{label}</h2>
+
 
 <div class="row">
 	<div class="span7">
+		<h2>{label}</h2>
 		<h3>{introduction_title}</h3>
 		{introduction_content}
 	
 		<!-- <h3>{requirements_title}</h3>
 		{requirements_list} -->
 	</div>
-	<div class="span2 offset1">
+	<!-- <div class="span2 offset1"> -->
 		<!-- <h3>{type_title}</h3>
 		<span class="pill">{type_content}</span>
 
 		<h3>{tested_title}</h3>
 		{tested_content} -->
-	</div>
+	<!--</div> -->
 </div>

@@ -46,15 +46,22 @@ class permissions
 	//--------------------------------------------
 	function get_plugins() {
 
+		// ini_set('display_errors', 1);
+
 		$plugins = new plugin();
+
+
+
 		$plugins = $plugins->enabled();
+
+		// die(var_export($plugins));
 
 		$content = array();
 		// methodes that are no actions
 		$methods = array('api', 'action');
 		$i = 0;
 		$x = 0;
-		foreach($plugins as $plugin) {
+		foreach($plugins as $j => $plugin) {
 			if(
 				$plugin === 'documentation' ||
 				$plugin === 'role-administration'
@@ -65,19 +72,54 @@ class permissions
 			$path = $this->rootdir.'/plugins/'.$plugin.'/class';
 			$files = $this->file->get_files($path);
 
+			//if ($j == 3) {
+				// var_export($path);
+				// var_export($files);
+				// die(0);
+			//}
+
 			$objs = array();
 			if(is_array($files)) {
-				foreach($files as $file) {
-					if(strripos($file['name'], 'controller.class') !== false && strripos($file['name'], 'about') === false) {
+				foreach($files as $k => $file) {
+					if(strripos($file['name'], 'controller.class') !== false && strripos($file['name'], 'about') === false && strripos($file['name'], 'development') === false) {
+						
+						//if ($j == 3) {
+						//	var_export($file['path']);
+						//	die();
+						//}
+
+
 						require_once($file['path']);
+						//if ($j == 3) {
+						//	die("abc");
+						// }
 						$class = str_replace('.class.php', '', $file['name']);
 						$class = str_replace('.', '_', $class);
 						$class = str_replace('-', '_', $class);
+						
+						//if ($j == 3) {
+						//	var_export($class);
+						//	die(0);
+						// }
+
 						$class = new $class($this->htvcenter, $this->response);
+						
+
 						$objs[] = $class;
 					}
 				}
+				/*
+				if ($j == 3) {
+
+					var_export($objs);
+					die();
+				}
+				*/
 			}
+
+			// if ($j == 3) {
+			//	die(var_export($objs));
+			// } 
 
 			$tmp = array();
 			foreach($objs as $obj) {
@@ -105,6 +147,12 @@ class permissions
 				$i++;
 			}
 
+			//if ($j == 3) {
+			//	die(var_export($content));
+			//} 
+
+
+			// die(var_export($content));
 		}
 		return $content;
 	}
